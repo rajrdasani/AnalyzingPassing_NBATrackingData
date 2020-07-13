@@ -11,7 +11,7 @@ library(tidyr)
 
 
 ```{r}
-gsw_cle_movements <- sportvu_convert_json("0021500438.json")
+gsw_cle_movements <- sportvu_convert_json("../CLEatGSW.json")
 str(gsw_cle_movements)
 ```
 

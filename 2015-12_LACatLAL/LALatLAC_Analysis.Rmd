@@ -3,26 +3,50 @@ title: "LALatLAC_Analysis"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r}
+source("../RajivFunctions.R")
+library(dplyr)
+library(tidyr)
+library(grid)
+library(jpeg)
+source("../fullcourt.R")
 ```
 
-## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r}
+lac_lal_movements <- sportvu_convert_json("../LACatLAL.json")
+str(lac_lal_movements)
+plays <- read.csv("LACatLAL_playbyplay.csv")
+str(plays)
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+fulltrack <- merge(lac_lal_movements, plays, by.x = "event.id",
+      by.y = "EVENTNUM", keep = TRUE)
+fulltrack <- fulltrack %>%
+  unite("Play", c(HOMEDESCRIPTION, VISITORDESCRIPTION), na.rm = TRUE, remove = FALSE)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+unique(fulltrack$SCORE)
+```
+
+```{r}
+fulltrack <- separate(fulltrack, col = "SCORE", into = c("Clippers", "Lakers"), sep = "-")
+fulltrack$Clippers <- as.numeric(fulltrack$Clippers)
+fulltrack$Lakers <- as.numeric(fulltrack$Lakers)
+
+fulltrack <- fulltrack %>% 
+  fill(Clippers) %>%
+  fill(Lakers)
+```
+
+```{r}
+sum(is.na(fulltrack$Clippers))
+sum(is.na(fulltrack$Lakers))
+fulltrack[0:42350, ]$Clippers = 0
+fulltrack[0:42350, ]$Lakers = 0
+unique(fulltrack$Clippers)
+
+```
+

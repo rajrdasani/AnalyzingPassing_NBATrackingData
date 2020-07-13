@@ -48,5 +48,21 @@ fulltrack[0:42350, ]$Clippers = 0
 fulltrack[0:42350, ]$Lakers = 0
 unique(fulltrack$Clippers)
 
+fulltrack$SCOREMARGIN <- fulltrack$Clippers - fulltrack$Lakers
+
+head(fulltrack)
 ```
+
+Combine play by play into one column (not sure if this is neccesary/useful yet)
+```{r}
+fulltrack <- fulltrack %>%
+  unite("Play", c(HOMEDESCRIPTION, VISITORDESCRIPTION), na.rm = TRUE, remove = FALSE)
+```
+
+```{r}
+fulltrack[535520, ]
+```
+
+
+
 

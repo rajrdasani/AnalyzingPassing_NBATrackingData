@@ -1,0 +1,73 @@
+---
+title: "LACatLAL_Analysis"
+output: html_document
+---
+
+```{r}
+source("../RajivFunctions.R")
+library(dplyr)
+library(tidyr)
+
+library(grid)
+library(jpeg)
+source("../fullcourt.R")
+```
+
+Load in data
+```{r}
+lac_lal_movements <- sportvu_convert_json("../LACatLAL.json")
+str(lac_lal_movements)
+plays <- read.csv("LACatLAL_playbyplay.csv")
+str(plays)
+```
+
+Combine movements and plays data 
+```{r}
+fulltrack <- merge(lac_lal_movements, plays, by.x = "event.id",
+      by.y = "EVENTNUM", keep = TRUE)
+```
+
+Combine play calls/results into one column
+```{r}
+fulltrack <- fulltrack %>%
+  unite("Play", c(HOMEDESCRIPTION, VISITORDESCRIPTION), na.rm = TRUE, remove = FALSE)
+```
+
+
+```{r}
+unique(fulltrack$SCORE)
+
+fulltrack <- separate(fulltrack, col = "SCORE", into = c("Clippers", "Lakers"), sep = "-")
+fulltrack$Clippers <- as.numeric(fulltrack$Clippers)
+fulltrack$Lakers <- as.numeric(fulltrack$Lakers)
+```
+
+Fill in score for all non-scoring plays
+
+```{r}
+fulltrack <- fulltrack %>% 
+  fill(Lakers) %>%
+  fill(Clippers)
+
+unique(fulltrack$Lakers)
+```
+
+Fill in data for first NA rows (before the first score is documented, so the score must be 0-0)
+
+```{r}
+sum(is.na(fulltrack$Lakers))
+sum(is.na(fulltrack$Clippers))
+
+fulltrack[0:42350, ]$Lakers = 0
+fulltrack[0:42350, ]$Clippers = 0
+unique(fulltrack$Lakers)
+
+head(fulltrack)
+```
+
+Fix margin column
+
+```{r}
+fulltrack$SCOREMARGIN = fulltrack$Clippers - fulltrack$Lakers
+```
+

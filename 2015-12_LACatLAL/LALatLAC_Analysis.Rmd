@@ -20,6 +20,10 @@ plays <- read.csv("LACatLAL_playbyplay.csv")
 str(plays)
 ```
 
+
+Merge dataframes by event
+Add column with everything that happens in one play 
+
 ```{r}
 fulltrack <- merge(lac_lal_movements, plays, by.x = "event.id",
       by.y = "EVENTNUM", keep = TRUE)
@@ -27,21 +31,30 @@ fulltrack <- fulltrack %>%
   unite("Play", c(HOMEDESCRIPTION, VISITORDESCRIPTION), na.rm = TRUE, remove = FALSE)
 ```
 
+
+Verify scores make sense
+
 ```{r}
 unique(fulltrack$SCORE)
 ```
+
+
 
 ```{r}
 fulltrack <- separate(fulltrack, col = "SCORE", into = c("Clippers", "Lakers"), sep = "-")
 fulltrack$Clippers <- as.numeric(fulltrack$Clippers)
 fulltrack$Lakers <- as.numeric(fulltrack$Lakers)
 
+```
+
+Fill in all the betweens
+Then add 0-0 to score for first 42,350 rows (calculated number of NAs after fill)
+
+```{r}
 fulltrack <- fulltrack %>% 
   fill(Clippers) %>%
   fill(Lakers)
-```
 
-```{r}
 sum(is.na(fulltrack$Clippers))
 sum(is.na(fulltrack$Lakers))
 fulltrack[0:42350, ]$Clippers = 0
@@ -58,6 +71,8 @@ Combine play by play into one column (not sure if this is neccesary/useful yet)
 fulltrack <- fulltrack %>%
   unite("Play", c(HOMEDESCRIPTION, VISITORDESCRIPTION), na.rm = TRUE, remove = FALSE)
 ```
+
+test that it works
 
 ```{r}
 fulltrack[535520, ]

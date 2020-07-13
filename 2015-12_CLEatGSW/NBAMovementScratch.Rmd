@@ -1,0 +1,139 @@
+---
+title: "NBAMovementData"
+output: html_document
+---
+
+```{r}
+source("../RajivFunctions.R")
+library(dplyr)
+library(tidyr)
+```
+
+
+```{r}
+gsw_cle_movements <- sportvu_convert_json("0021500438.json")
+str(gsw_cle_movements)
+```
+
+```{r}
+library(grid)
+library(jpeg)
+source("../fullcourt.R")
+
+event1 = gsw_cle_movements[gsw_cle_movements$event.id == 3 & 
+                             gsw_cle_movements$lastname == "ball", ]
+fullcourt() + 
+  geom_point(data = event1, 
+       aes(x_loc, y_loc, color = cut(game_clock, breaks = 3)))
+
+```
+
+```{r}
+james <- head(gsw_cle_movements[which(gsw_cle_movements$lastname == "James" & gsw_cle_movements$event.id %in% c(330:333)), ])
+
+ggplot(james) +
+  geom_point(aes(x_loc, y_loc))
+
+ball <- head(gsw_cle_movements[which(gsw_cle_movements$lastname == "ball"), ], 500)
+
+ggplot(ball) +
+  geom_point(aes(x_loc, y_loc))
+
+
+```
+
+
+```{r}
+event1 = gsw_cle_movements[gsw_cle_movements$event.id == 3 & 
+                             gsw_cle_movements$lastname == "ball", ]
+ggplot(event1, 
+       aes(x_loc, y_loc, color = cut(game_clock, breaks = 3))) +
+  geom_point()
+
+```
+
+```{r}
+plays <- read.csv("playbyplay.csv")
+```
+
+
+```{r}
+head(plays)
+```
+
+```{r}
+fulltrack <- merge(gsw_cle_movements, plays, by.x = "event.id",
+      by.y = "EVENTNUM", keep = TRUE)
+
+```
+
+```{r}
+event1 = fulltrack[fulltrack$event.id == 2, ]
+fullcourt() + 
+  geom_point(data = event1, 
+       aes(x_loc, y_loc, color = lastname)) +
+  ggtitle(aes(HOMEDESCRIPTION))
+
+head(event1)
+
+```
+
+```{r}
+fulltrack <- fulltrack %>%
+  unite("Play", c(HOMEDESCRIPTION, VISITORDESCRIPTION), na.rm = TRUE, remove = FALSE)
+```
+
+
+
+```{r}
+score = fulltrack[!is.na(fulltrack$SCORE) & !(fulltrack$SCORE == ""),]
+
+bogutdunk = score[score$event.id == 10 & (score$lastname == "ball" |
+                                            score$lastname == "Bogut" |
+                                            score$lastname == "Thompson"),]
+
+fullcourt() + 
+  geom_point(data = bogutdunk, 
+       aes(x_loc, y_loc, alpha = game_clock, color = lastname)) +
+  ggtitle("First Score of the Game: Bogut Dunk. Thompson Assist")
+```
+
+```{r}
+curry_make <- fulltrack[which(fulltrack$lastname == "Curry" & fulltrack$EVENTMSGTYPE == 1),]
+curry_miss <- fulltrack[which(fulltrack$lastname == "Curry" & fulltrack$EVENTMSGTYPE == 2),]
+
+travelDist(curry_make$x_loc, curry_make$y_loc)
+travelDist(curry_miss$x_loc, curry_miss$y_loc)
+
+make <- fulltrack[which(fulltrack$EVENTMSGTYPE == 1),]
+miss <- fulltrack[which(fulltrack$lastname == "Curry" & fulltrack$EVENTMSGTYPE == 2),]
+
+travelDist(curry_make$x_loc, curry_make$y_loc)
+travelDist(curry_miss$x_loc, curry_miss$y_loc)
+```
+
+```{r}
+unique(fulltrack$SCORE)
+
+fulltrack <- separate(fulltrack, col = "SCORE", into = c("Cavs", "Warriors"), sep = "-")
+fulltrack$Cavs <- as.numeric(fulltrack$Cavs)
+fulltrack$Warriors <- as.numeric(fulltrack$Warriors)
+
+```
+
+
+```{r}
+
+fulltrack <- fulltrack %>% 
+  fill(Cavs) %>%
+  fill(Warriors)
+
+fulltrack[0:49467, ]$Warriors = 0
+fulltrack[0:49468, ]$Cavs = 0
+unique(fulltrack$Warriors)
+
+head(fulltrack)
+```
+
+
+

@@ -1,0 +1,157 @@
+---
+title: "LACatLAL_Passing"
+output: html_document
+---
+
+# Loading and Cleaning the Data
+```{r, message=F}
+library(tidyverse)
+library(janitor)
+library(trajr)
+library(lubridate)
+library(hms)
+source("../RajivFunctions.R")
+source("../fullcourt.R")
+
+
+moments <- sportvu_convert_json("LACatLAL.json")
+pbp <- read_csv("LACatLAL_playbyplay.csv") %>% 
+  clean_names()
+
+moments_with_pbp <- moments %>% 
+  left_join(pbp, 
+      by = c("event.id" = "eventnum", "quarter" = "period")) %>% 
+  mutate(team = case_when(team_id == 1610612747 ~ "Lakers",
+                          team_id == 1610612746 ~ "Clippers",
+                          is.na(team_id) ~ "ball"),
+         game_clock = hms::as_hms(game_clock),
+         est_time_of_play = hms::as_hms(pctimestring/60)) %>% 
+  select(-matches("\\d")) %>% 
+  select(-pctimestring) %>% 
+  select(homedescription, visitordescription, everything()) %>% 
+  arrange(quarter, event.id, desc(game_clock), desc(shot_clock))
+```
+
+# Gantt Chart of Moments
+
+Although each moment in the data refers to a disinct event (descriptions of which are found in the play-by-play data), there is significant overlap in the time covered. The following function visualizes the timeline of events in a Gantt chart.
+
+```{r}
+gantt_moments <- function(range) {
+  moments_with_pbp %>% 
+    filter(event.id %in% range) %>% 
+    group_by(event.id) %>% 
+    summarise(start_time = max(game_clock),
+              end_time = min(game_clock)) %>% 
+    ggplot() + 
+    geom_segment(aes(x = start_time, 
+                     xend = end_time, 
+                     y = event.id, 
+                     yend = event.id),
+                 size = 100/length(range)) + 
+    scale_x_reverse(breaks = 
+                      as.numeric(ms("12:00", "11:00",
+                                    "10:00", "09:00",
+                                    "08:00", "07:00",
+                                    "06:00", "05:00",
+                                    "04:00", "03:00",
+                                    "02:00", "01:00",
+                                    "00:00")),
+                    labels = function(l)
+                      strftime(hms(l), "%M:%S")) +
+    scale_y_reverse() +
+    labs(x = "Game Clock",
+         y = "Moment") +
+    theme_bw()
+}
+gantt_moments(1:20)
+```
+
+# Peculiarities in the Data
+
+As noted in Robertson 2017, the cameras do not always stop rolling when there is a stoppage of play. As a result, there are times where there are more than the expected 11 frames at a given timestamp.
+
+```{r}
+moments_with_pbp %>% 
+  group_by(quarter, event.id, game_clock) %>% 
+  summarise(n()) %>% 
+  filter(`n()` != 11) %>% 
+  head(n = 15)
+```
+
+# Indentifying Passes
+
+To identify passes in the tracking data, we created a number of additional variables using the **trajr** package. We tracked the instantaneous speed, acceleration, and directional change of the ball. We identified the most likely ball_carrier my measuring the distance between the ball and the players.
+
+```{r}
+source("../RajivFunctions.R")
+
+ball_distance <- 
+  player_dist_matrix(data = moments, eventID = 2) %>%
+  select(starts_with("ball_"))
+
+selected_play <- moments_with_pbp %>% 
+  filter(event.id == 2, lastname == "ball") %>% 
+  mutate(ball_carrier = 
+           apply(ball_distance, 1, which.min),
+         ball_carrier_dist = 
+           apply(ball_distance, 1, min))
+coords <- selected_play %>% 
+  select(x_loc, y_loc, game_clock) %>% 
+  TrajFromCoords(fps = 25)
+traj_data <- coords %>% 
+  mutate(inst_speed = c(NA, TrajDerivatives(coords)[[1]]),
+         inst_acceleration = c(NA, NA, TrajDerivatives(coords)[[3]]),
+         dir_change = c(NA, NA, TrajDirectionalChange(coords)))
+```
+
+By examining the following plot of event 2, we can gain an intuition for the characteristics unique to passing. Passes are relatively easy to spot due to the increase in velocity and the straight path followed
+
+```{r}
+fullcourt() +
+  geom_point(data = selected_play,
+             aes(x_loc, y_loc, color = team)) + 
+  scale_color_manual(values = c("Lakers" = "#fdb927",
+                                "Clippers" = "#1D428A",
+                                "ball" = "#FA8320")) +
+  scale_y_reverse()
+```
+
+We identified certain "nodes", that is frames that were likely candidates for the beginning of a pass. A frame was classified as a node if:
+
+- (The direction of travel changes rapidly OR the ball begins to accelerate rapidly)
+
+We refined our search further by excluding nodes where:
+
+- The next node has the same ball handler as before (to exclude dribbles)
+- The ball is at a height greater than 8 feet (to exclude rebounds off the rim)
+- The game clock is less than 12:00 (to exclude tap outs from jump balls)
+
+
+```{r}
+nodes <- selected_play %>% 
+  left_join(traj_data, by = c("x_loc" = "x", "y_loc" = "y", "game_clock" = "game_clock")) %>% 
+  unique() %>% 
+  filter(abs(dir_change) > 200 | inst_acceleration > 250) %>% 
+  mutate(next_node_dist = c(sqrt(diff(x_loc)^2 + diff(y_loc)^2), NA))
+nodes <- nodes %>% 
+  mutate(next_node_same_carrier = unlist(
+    lapply(1:nrow(nodes), function(x) nodes[x,]$ball_carrier == nodes[x+1,]$ball_carrier))) %>% 
+  filter(next_node_same_carrier == F,
+         radius < 8,
+         game_clock < 720)
+```
+
+The figure below shows that this method succesfully captured the passes in the first moment. A quick look at subsequent moments shows that some refining is needed.
+
+```{r}
+fullcourt() +
+  geom_point(data = selected_play,
+             aes(x_loc, y_loc, color = team)) + 
+  geom_point(data = nodes,
+             aes(x_loc, y_loc), color = "red") +
+  scale_color_manual(values = c("Lakers" = "#fdb927",
+                                "Clippers" = "#1D428A",
+                                "ball" = "#FA8320")) +
+  scale_y_reverse()
+```

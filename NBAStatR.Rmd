@@ -1,0 +1,29 @@
+---
+title: "NBAStatR"
+output: html_document
+---
+
+```{r}
+devtools::install_github("abresler/nbastatR")
+install.packages("nbastatR")
+library(nbastatR)
+library(tidyverse)
+```
+
+```{r}
+d <- bref_bios("Kyle Lowry")
+d %>% select(6) %>% unnest()
+
+e <- bref_bios(players = c("Kyle Lowry", "Kawhi Leonard"))
+e$dataTable[1]
+```
+
+```{r}
+geydata_draft_express_measurements(
+  years = 1987:2017, 
+  sources = NULL,
+  positions = "all", 
+  return_unique_players = FALSE, 
+  return_message = TRUE)
+```
+

@@ -18,7 +18,7 @@ library(ggplot2)
 
 Load in data
 ```{r}
-lac_lal_movements <- sportvu_convert_json("../LACatLAL.json")
+lac_lal_movements <- sportvu_convert_json("LACatLAL.json")
 str(lac_lal_movements)
 plays <- read.csv("LACatLAL_playbyplay.csv")
 str(plays)
@@ -91,7 +91,12 @@ first_play_shot = first_play[(first_play$lastname == "Bryant" |
 fullcourt() + 
   geom_point(data = first_play_shot, 
        aes(x_loc, y_loc, alpha = game_clock, color = lastname)) +
-  ggtitle("First Play of the Game: Kobe Miss")
+  ggtitle("First Play of the Game: Kobe Miss") +
+  scale_color_manual(values = c("Bryant" = "#552583",
+                                "ball" = "#FA8320")) +
+  labs(color = "Player",
+       alpha = "Game Time") +
+  theme(legend.position = "bottom")
 ```
 
 
@@ -106,9 +111,14 @@ first_basket_shot = first_basket[(first_basket$lastname == "Griffin" |first_bask
 fullcourt() + 
   geom_point(data = first_basket_shot, 
        aes(x_loc, y_loc, alpha = game_clock, color = lastname)) +
-  ggtitle("First Score of the Game: Blake G. Layup")
+  ggtitle(paste("First Score of the Game:", first_basket$Play[1])) +
+  scale_color_manual(values = c("Griffin" = "#0061A1",
+                                "ball" = "#FA8320")) +
+  labs(color = "Player",
+       alpha = "Game Time") +
+  theme(legend.position = "bottom")
 
-range(first_basket$game_clock)
+
 ```
 
 
@@ -234,8 +244,11 @@ fullcourt() +
                aes(x=X,y=Y,group=ID, label = Name),
                color=dense_rank(dplayer$ID),
                size=5) +
-  geom_text(data = dplayer, 
+  geom_text(data = dplayer[dplayer$ID == 1610612747, ], 
+            aes(label=Name, x = X + 3, y = Y -1 )) +
+  geom_text(data = dplayer[dplayer$ID == 1610612746, ], 
             aes(label=Name, x = X, y = Y + 3)) + 
+
   scale_colour_brewer() +
     ##Add Convex hull areas
   geom_polygon(data=dchull,aes(x=X,y=Y,group=ID),
@@ -246,5 +259,5 @@ fullcourt() +
   scale_shape_identity() +
   geom_point(data=dcentroid,aes(x=X,y=Y,group=dcentroid$ID),
              color=(dcentroid$ID),
-             size=3, shape=8) 
+             size=3, shape=8)
 ```

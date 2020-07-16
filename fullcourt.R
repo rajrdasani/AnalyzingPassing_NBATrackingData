@@ -56,4 +56,4 @@ fullcourt <- function () {
     coord_fixed()+
     
     ###Clean up the Court 
-    theme_bw()+theme(panel.grid=element_blank(), legend.title=element_blank(), panel.border=element_blank(),axis.text=element_blank(),axis.ticks=element_blank(),axis.title=element_blank(),legend.position="top")}
+    theme_bw()+theme(panel.grid=element_blank(), panel.border=element_blank(),axis.text=element_blank(),axis.ticks=element_blank(),axis.title=element_blank(),legend.position="top")}

@@ -1,8 +1,7 @@
 ---
-title: "LACatLAL_Analysis"
+title: "LACatLAL_EDA"
 output: html_document
 ---
-
 ```{r}
 source("../RajivFunctions.R")
 library(dplyr)
@@ -69,13 +68,11 @@ head(fulltrack)
 ```
 
 Fix margin column
-
 ```{r}
 fulltrack$SCOREMARGIN = fulltrack$Clippers - fulltrack$Lakers
-
-ggplot(fulltrack, aes(SCOREMARGIN)) +
-  geom_histogram(bins = 8)
 ```
+
+
 
 ```{r}
 ball_movements = fulltrack[fulltrack$lastname == "ball", ]
@@ -308,3 +305,5 @@ fullcourt() +
              color=(dcentroid$ID),
              size=3, shape=8)
 ```
+
+

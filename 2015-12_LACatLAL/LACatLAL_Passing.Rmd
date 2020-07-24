@@ -287,13 +287,4 @@ fullcourt() +
 ```
 
 
-```{r}
-source('get_nodes_new.R')
-
-```
-
-
-```{r}
-get_nodes(frames = full_game)
-```
 

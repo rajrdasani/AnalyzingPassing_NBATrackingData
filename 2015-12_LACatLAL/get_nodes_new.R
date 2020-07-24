@@ -1,10 +1,12 @@
 
 library(tidyverse)
+library(trajr)
+library(dplyr)
 source("../RajivFunctions.R")
 
-load(file = "full_game.rda")
+load("C:/Users/rajda/OneDrive/Desktop/CMU/NBATrackingData/2015-12_LACatLAL/full_game.rda")
 
-get_nodes <- function(frames){
+get_nodes_new <- function(frames){
   selected_play <- full_game %>%
     filter(frame_num %in% frames)
   selected_play <- selected_play %>%
@@ -54,18 +56,21 @@ get_nodes <- function(frames){
            radius < 9,
            game_clock < 720) %>% 
     mutate(next_node_dist = c(sqrt(diff(x_loc)^2 + diff(y_loc)^2), NA)) %>% 
-    filter(next_node_dist > 3 | is.na(next_node_dist))
+    filter(next_node_dist > 3)
+  #| is.na(next_node_dist))
   
   return(nodes)
 }
-
-all_ball_frames <- filter(data = full_game, lastname = "ball")
-
+# full_game <- as.data.frame(full_game)
+all_ball_frames <- full_game[full_game$lastname == "ball", ]
+#   
+#   dplyr::filter(data = as_tibble(full_game), lastname == "ball")
+# length(which(full_game$lastname == "ball"))
 
 partitions <- c(seq(from = 1, to = nrow(all_ball_frames), by = 5000), nrow(all_ball_frames))
 nodes_dfs <- list()
 for(i in 1:length(partitions)){
-  nodes_dfs[[i]] <- get_nodes(partitions[i]:partitions[i + 1])
+  nodes_dfs[[i]] <- get_nodes_new(partitions[i]:partitions[i + 1])
 }
 
 

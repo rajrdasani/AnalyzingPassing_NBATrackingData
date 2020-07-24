@@ -3,26 +3,27 @@ title: "end_nodes"
 output: html_document
 ---
 
+
 ```{r}
 source("../RajivFunctions.R")
-source("get_nodes.R")
+source('get_nodes_new.R')
 library(trajr)
 library(dplyr)
 ```
 
 ```{r}
-event2_moments = moments %>%
-  filter(game_clock > 696) %>%
-  filter(event.id == 2)
+firstposs_moments_ball = full_game %>%
+  filter(game_clock > 696, quarter == 1) %>%
+  filter(lastname == "ball")
 
-nodes <- get_nodes(selected_play = event2_moments,
-                   event_id = 2)
+nodes <- get_nodes_new(1:nrow(firstposs_moments_ball))
+
 ```
 
 
 ```{r}
 fullcourt() +
-  geom_point(data = selected_play_ball,
+  geom_point(data = firstposs_moments_ball,
              aes(x_loc, y_loc, color = team)) + 
   geom_point(data = nodes,
              aes(x_loc, y_loc), color = "red") +
@@ -32,30 +33,26 @@ fullcourt() +
   scale_y_reverse()
 ```
 
-Given these nodes, we want to find the next spot when the ball stops moving 
-
-1) for every row, find difference in total area 
+Given these nodes, we want to find the next spot when the ball stops moving. So for every row, find difference in total area 
 
 ```{r}
-ball_event2 <- filter(event2_moments, lastname == 'ball')
-ball_event2$area_diff <- 0
+firstposs_moments_ball$area_diff <- 0
 
-for (i in 1:nrow(ball_event2)) {
-  ball_event2$area_diff[i] = sqrt(((ball_event2$x_loc[i+1] - ball_event2$x_loc[i]) ** 2) +
-               ((ball_event2$y_loc[i+1] - ball_event2$y_loc[i]) ** 2) +
-                 ((ball_event2$radius[i+1] - ball_event2$radius[i]) ** 2))
+for (i in 1:nrow(firstposs_moments_ball)) {
+  firstposs_moments_ball$area_diff[i] = 
+    sqrt(((firstposs_moments_ball$x_loc[i+1] - firstposs_moments_ball$x_loc[i]) ** 2) +
+               ((firstposs_moments_ball$y_loc[i+1] - firstposs_moments_ball$y_loc[i]) ** 2) +
+                 ((firstposs_moments_ball$radius[i+1] - firstposs_moments_ball$radius[i]) ** 2))
 }
 
-ball_event2$sig_mov <- ball_event2$area_diff > 0.5
-head(ball_event2)
-
+firstposs_moments_ball$sig_mov <- firstposs_moments_ball$area_diff > 0.5
 ```
 
 
 ```{r}
 endnodes_df <- NULL
 for (i in 1:nrow(nodes)) {
-  postnode_df <- ball_event2[ball_event2$game_clock < nodes$game_clock[i], ]
+  postnode_df <- firstposs_moments_ball[firstposs_moments_ball$game_clock < nodes$game_clock[i] - 0.08, ]
   endnode <- postnode_df[postnode_df$sig_mov == FALSE,][1,]
   endnodes_df <- rbind(endnodes_df, endnode)
 }
@@ -64,38 +61,35 @@ for (i in 1:nrow(nodes)) {
 
 ```{r}
 fullcourt() +
-  geom_point(data = selected_play_ball,
+  geom_point(data = firstposs_moments_ball,
              aes(x_loc, y_loc, color = team)) + 
   geom_point(data = nodes,
              aes(x_loc, y_loc), color = "red", size = 4) +
   geom_point(data = endnodes_df,
-             aes(x_loc, y_loc), color = "green") +
+             aes(x_loc, y_loc), color = "green", size = 4) +
   scale_color_manual(values = c("Lakers" = "#fdb927",
                                 "Clippers" = "#1D428A",
                                 "ball" = "#FA8320")) +
   scale_y_reverse()
 ```
 
-
-
-
+Now lets try it for a random set of times 
 
 ```{r}
-event8_moments = moments %>%
-  filter(event.id == 8)
+randomposs_moments_ball = full_game %>%
+  filter(game_clock < 462, game_clock > 430, quarter == 3) %>%
+  filter(lastname == "ball")
 
-event8_ball <- filter(event8_moments, lastname == 'ball')
-
-nodes <- get_nodes(selected_play = event8_moments,
-                   event_id = 8)
+nodes <- get_nodes_new(randomposs_moments_ball[1,]$frame_num:
+                  randomposs_moments_ball[nrow(randomposs_moments_ball),]$frame_num)
 
 ```
 
 
 ```{r}
 fullcourt() +
-  geom_point(data = event8_ball,
-             aes(x_loc, y_loc), color = "orange") + 
+  geom_point(data = randomposs_moments_ball,
+             aes(x_loc, y_loc, color = team)) + 
   geom_point(data = nodes,
              aes(x_loc, y_loc), color = "red") +
   scale_color_manual(values = c("Lakers" = "#fdb927",
@@ -109,16 +103,17 @@ Given these nodes, we want to find the next spot when the ball stops moving
 1) for every row, find difference in total area 
 
 ```{r}
-event8_ball$area_diff <- 0
+randomposs_moments_ball$area_diff <- 0
 
-for (i in 1:nrow(event8_ball)) {
-  event8_ball$area_diff[i] = sqrt(((event8_ball$x_loc[i+1] - event8_ball$x_loc[i]) ** 2) +
-               ((event8_ball$y_loc[i+1] - event8_ball$y_loc[i]) ** 2) +
-                 ((event8_ball$radius[i+1] - event8_ball$radius[i]) ** 2))
+for (i in 1:nrow(randomposs_moments_ball)) {
+  randomposs_moments_ball$area_diff[i] = 
+    sqrt(((randomposs_moments_ball$x_loc[i+1] - randomposs_moments_ball$x_loc[i]) ** 2) +
+               ((randomposs_moments_ball$y_loc[i+1] - randomposs_moments_ball$y_loc[i]) ** 2) +
+                 ((randomposs_moments_ball$radius[i+1] - randomposs_moments_ball$radius[i]) ** 2))
 }
 
-event8_ball$sig_mov <- event8_ball$area_diff > 0.5
-head(event8_ball)
+randomposs_moments_ball$sig_mov <- randomposs_moments_ball$area_diff > 0.5
+head(randomposs_moments_ball)
 
 ```
 
@@ -126,7 +121,7 @@ head(event8_ball)
 ```{r}
 endnodes_df <- NULL
 for (i in 1:nrow(nodes)) {
-  postnode_df <- event8_ball[event8_ball$game_clock < nodes$game_clock[i], ]
+  postnode_df <- randomposs_moments_ball[randomposs_moments_ball$game_clock < nodes$game_clock[i] - 0.08, ]
   endnode <- postnode_df[postnode_df$sig_mov == FALSE,][1,]
   endnodes_df <- rbind(endnodes_df, endnode)
 }
@@ -134,16 +129,33 @@ for (i in 1:nrow(nodes)) {
 ```
 
 ```{r}
+nodes$pass_num <- c(1:nrow(nodes))
+endnodes_df$pass_num <- c(1:nrow(nodes))
+```
+
+
+```{r}
 fullcourt() +
-  geom_point(data = event8_ball,
-             aes(x_loc, y_loc), color = "orange") + 
+  geom_point(data = randomposs_moments_ball,
+             aes(x_loc, y_loc, color = team)) + 
   geom_point(data = nodes,
              aes(x_loc, y_loc), color = "red", size = 3) +
+  geom_text(data = nodes,
+            aes(label=pass_num, x= x_loc, y = y_loc)) +
   geom_point(data = endnodes_df,
              aes(x_loc, y_loc), color = "green", size = 3) +
+  geom_text(data = endnodes_df,
+            aes(label=pass_num, x= x_loc, y = y_loc)) +
   scale_color_manual(values = c("Lakers" = "#fdb927",
                                 "Clippers" = "#1D428A",
                                 "ball" = "#FA8320")) +
   scale_y_reverse()
 ```
+
+
+
+
+-----------------------------------------
+
+
 

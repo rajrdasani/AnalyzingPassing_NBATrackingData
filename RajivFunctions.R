@@ -1,8 +1,19 @@
+# A copy of rajshah4's NBA_SportVU _functions.R with some minor adjustments
+# and bug fixes.
+
 library(RCurl)
 library(jsonlite)
 library(dplyr)
-library(plotly)
 library(sp)
+
+minN <- function(x, N=2){
+  len <- length(x)
+  if(N>len){
+    warning('N greater than length(x).  Setting N=length(x)')
+    N <- length(x)
+  }
+  sort(x,partial=N)[N]
+}
 
 sportvu_convert_json <- function (file.name)
 {
@@ -32,7 +43,7 @@ sportvu_convert_json <- function (file.name)
   
   #Remove events that are NAs
   final <- (lapply(test2, function(x) {
-    if ((length(unlist(x)))<=1) {x <- NA} 
+    if ((length(unlist(x)))<=1) {x <- NA}
     return(x)
   }))
   
@@ -73,7 +84,7 @@ sportvu_convert_json <- function (file.name)
 travelDist <- function(xloc, yloc){
   diffx <- diff(xloc)
   diffy <- diff(yloc)
-  ##Removes big jumps - Limiting to changes of less than 1 foot per .04 seconds means 
+  ##Removes big jumps - Limiting to changes of less than 1 foot per .04 seconds means
   # anything over 17 mph will be excluded, this seems reasonable
   diff <- as.data.frame(cbind(diffx,diffy))
   diff  <- subset(diff, abs(diffx) < 1 & abs(diffy) < 1)
@@ -84,38 +95,62 @@ travelDist <- function(xloc, yloc){
   diffy2 <- diffy ^ 2
   a<- diffx2 + diffy2
   b<-sqrt(a)
-  (sum(b))  
+  (sum(b))
 }
 
-player_dist <- function(data, lastnameA,lastnameB, eventID) {
-  #Functions finds the distance of the player, assumes you have a dataframe all.movements with player info
-  df <- data[which((data$lastname == lastnameA | data$lastname == lastnameB) & data$event.id == eventID),]
-  dfA <- df %>% filter (lastname==lastnameA) %>% select (x_loc,y_loc)
-  dfB <- df %>% filter (lastname==lastnameB) %>% select (x_loc,y_loc)
+player_dist <- function(data, lastnameA,lastnameB){
+  # Functions finds the distance of the player
+  df <- data[which(data$lastname == lastnameA | data$lastname == lastnameB),]
+  dfA <- df %>%
+    filter(lastname == lastnameA) %>%
+    select (x_loc, y_loc)
+  dfB <- df %>%
+    filter(lastname == lastnameB) %>%
+    select (x_loc, y_loc)
   df.l <- 1:nrow(dfA)
   distsdf <- unlist(lapply(df.l,function(x) {dist(rbind(dfA[x,], dfB[x,]))}))
   return(distsdf)
 }
 
-get_game_clock <- function(data, lastnameA,eventID){
-  #Function gets the glame clock, assumes there is a dataframe all.movements with player info
-  alldf <- data[which((data$lastname == lastnameA) & data$event.id == eventID),]
+
+
+dist_to_ball <- function(data, index){
+  players <- data %>%
+    filter(frame_num == index) %>% 
+    pull(lastname)
+  
+  dist_matrix <- data %>%
+    filter(frame_num == index) %>%
+    select(x_loc, y_loc) %>%
+    dist(diag = T, upper = T) %>% 
+    as.matrix() %>% 
+    as.data.frame()
+  
+  colnames(dist_matrix) <- players
+  
+  return(dist_matrix$ball)
+}
+
+
+
+
+get_game_clock <- function(data, lastnameA){
+  alldf <- data[which(data$lastname == lastnameA),]
   game_clock <- alldf$game_clock
   return(as.data.frame(game_clock))
 }
 
-player_dist_matrix <- function(data, eventID) {
+player_dist_matrix <- function(data) {
   #Function creates a matrix of all player/ball distances with each other
-  #assumes there a dataframe all.movements with player info
-  players <- data %>% filter(event.id==eventID) %>% select(lastname) %>% distinct(lastname)
+  players <- data %>% select(lastname) %>% distinct(lastname)
   players2 <- players
-  bigdistance <-unlist(lapply(list(players$lastname)[[1]], function(X) {
-    lapply(list(players2$lastname)[[1]], function(Y) {test=
-      player_dist(data, X, Y,eventID)
+  bigdistance <-unlist(lapply(players$lastname, function(X) {
+    lapply(players2$lastname, function(Y) {
+      player_dist(data, X, Y)
     })
   }), recursive=FALSE)
-  bigdistance_names <-unlist(lapply(list(players$lastname)[[1]], function(X) {
-    lapply(list(players2$lastname)[[1]], function(Y) {
+  bigdistance_names <-unlist(lapply(players$lastname, function(X) {
+    lapply(players2$lastname, function(Y) {
       paste(X, Y,sep = "_")
     })
   }), recursive=FALSE)
@@ -123,10 +158,25 @@ player_dist_matrix <- function(data, eventID) {
   colnames(bigdistancedf) <- bigdistance_names
   bigdistancedf <- bigdistancedf[,colSums(bigdistancedf^2) !=0]
   bigdistancedf <- as.data.frame(bigdistancedf)
-  clockinfo <- get_game_clock(data, "ball",eventID)
+  clockinfo <- get_game_clock(data, "ball")
   bigdistancedf$game_clock <- clockinfo$game_clock
   return (bigdistancedf)
 }
+
+one_player_dist_matrix <- function(data, player_name){
+  #Function creates a matrix of all player/ball distances with each other
+  players <- data %>% pull(lastname) %>% unique()
+  
+  dist_matrix <- lapply(players, function(x) player_dist(data, player_name, x)) %>% 
+    as.data.frame()
+  colnames(dist_matrix) <- players
+  #dist_matrix <- dist_matrix[,colSums(dist_matrix^2) != 0]
+  dist_matrix <- dist_matrix %>% 
+    mutate(game_clock = get_game_clock(data, "ball")$game_clock)
+  
+  return (dist_matrix)
+}
+
 
 get_pbp <- function(gameid){
   #Grabs the play by play data from the NBA site
@@ -157,31 +207,29 @@ chull_areabyteam <- function (total,balltime) {
   allsum <- NULL
   teams <- as.list((unique(total$team_id)))
   teams <- teams[!is.na(teams)]
-  for(i in 1:(nrow(balltime))) 
+  for(i in 1:(nrow(balltime)))
   {temp <- total %>% filter(event.id == balltime$event.id[i] & game_clock == balltime$clock28[i])  %>% filter(lastname!="ball")
   if (nrow(temp) == 10) {
     dfall <- lapply(teams,function (x) { df <- temp %>% filter(team_id == x)
     if (nrow(df) == 5) {area <- (chull_area(df$x_loc_r,df$y_loc_r))
     area}
     })
-    df <- cbind(balltime$event.id[i],teams[[1]],dfall[[1]],teams[[2]],dfall[[2]])  
+    df <- cbind(balltime$event.id[i],teams[[1]],dfall[[1]],teams[[2]],dfall[[2]])
     allsum <- rbind(df,allsum)
   }
   }
   allsum <- as.data.frame(allsum)
   colnames(allsum)<-c("event.id","team1","team1_area","team2","team2_area")
   return(allsum)
-}        
+}
 
-player_position <- function(event.id,gameclock){
+player_position <- function(eventid,gameclock){
   ##Returns positions of all players at a time
   ##Requires data in total and balltime
-  dfall <- total %>% 
-    filter(game_clock == gameclock, event.id == event.id)  %>% 
-    filter(lastname!="ball") %>% 
-    select(lastname,team_id,x_loc_r,y_loc_r) 
-    colnames(dfall) <- c('Name','ID','X','Y')
-    return(dfall)
+  dfall <- total %>% filter(game_clock == gameclock,event.id=eventid)  %>%
+    filter(lastname!="ball") %>% select (team_id,x_loc_r,y_loc_r)
+  colnames(dfall) <- c('ID','X','Y')
+  return(dfall)
 }
 
 chull_plot <- function(event.id,game_clock) {

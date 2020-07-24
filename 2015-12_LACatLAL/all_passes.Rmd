@@ -1,0 +1,83 @@
+---
+title: "all_passes"
+output: html_document
+---
+
+```{r}
+source("get_nodes_new.R")
+source("../RajivFunctions.R")
+library(trajr)
+library(dplyr)
+```
+
+
+
+
+```{r}
+all_moments_ball <- full_game %>%
+  filter(lastname == "ball")
+
+lastframe_q1 <- all_moments_ball[all_moments_ball$quarter == 2, ]$frame_num[1] - 1
+lastframe_q2 <- all_moments_ball[all_moments_ball$quarter == 3, ]$frame_num[1] - 1
+lastframe_q3 <- all_moments_ball[all_moments_ball$quarter == 4, ]$frame_num[1] - 1
+lastframe_q4 = nrow(all_moments_ball)
+
+
+nodes_q1 <- get_nodes_new(1:lastframe_q1)
+nodes_q2 <- get_nodes_new(lastframe_q1+1:lastframe_q2)
+nodes_q3 <- get_nodes_new(lastframe_q2+1:lastframe_q3)
+nodes_q4 <- get_nodes_new(lastframe_q3+1:lastframe_q4)
+
+nrow(nodes_q1) + nrow(nodes_q2) + nrow(nodes_q3) + nrow(nodes_q4)
+
+all_nodes <- do.call("rbind", list(nodes_q1, nodes_q2, nodes_q3, nodes_q4))
+
+
+```
+
+
+```{r}
+all_moments_ball$area_diff <- 0
+
+for (i in 1:nrow(all_moments_ball)) {
+  all_moments_ball$area_diff[i] = 
+    sqrt(((all_moments_ball$x_loc[i+1] - all_moments_ball$x_loc[i]) ** 2) +
+               ((all_moments_ball$y_loc[i+1] - all_moments_ball$y_loc[i]) ** 2) +
+                 ((all_moments_ball$radius[i+1] - all_moments_ball$radius[i]) ** 2))
+}
+
+all_moments_ball$sig_mov <- all_moments_ball$area_diff > 0.5
+head(all_moments_ball)
+
+```
+
+
+```{r}
+all_endnodes <- NULL
+for (i in 1:nrow(allnodes)) {
+  postnode_df <- all_moments_ball[all_moments_ball$game_clock < nodes$game_clock[i] - 0.08, ]
+  endnode <- postnode_df[postnode_df$sig_mov == FALSE,][1,]
+  all_endnodes <- rbind(all_endnodes, endnode)
+}
+
+all_endnodes
+```
+
+```{r}
+all_nodes$pass_num <- c(1:nrow(all_nodes))
+all_endnodes$pass_num <- c(1:nrow(all_endnodes))
+
+
+library(data.table)
+all_passes <- rbindlist(list(all_nodes, all_endnodes), fill = TRUE)
+all_passes <- all_passes[order(all_passes$pass_num),]
+all_passes
+```
+
+
+
+
+
+
+
+

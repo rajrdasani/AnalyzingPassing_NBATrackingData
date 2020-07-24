@@ -2,8 +2,8 @@ source("../RajivFunctions.R")
 library(trajr)
 library(dplyr)
 
-get_nodes <- function(moments_data, selected_play, event_id) {
-  ball_distance <- player_dist_matrix(data = moments_data, eventID = event_id) %>%
+get_nodes <- function(selected_play, event_id) {
+  ball_distance <- player_dist_matrix(data = selected_play, eventID = event_id) %>%
     select(starts_with("ball_"))
   
   selected_play_ball <- selected_play %>% 

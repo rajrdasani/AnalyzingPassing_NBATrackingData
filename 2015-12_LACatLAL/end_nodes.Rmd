@@ -1,0 +1,149 @@
+---
+title: "end_nodes"
+output: html_document
+---
+
+```{r}
+source("../RajivFunctions.R")
+source("get_nodes.R")
+library(trajr)
+library(dplyr)
+```
+
+```{r}
+event2_moments = moments %>%
+  filter(game_clock > 696) %>%
+  filter(event.id == 2)
+
+nodes <- get_nodes(selected_play = event2_moments,
+                   event_id = 2)
+```
+
+
+```{r}
+fullcourt() +
+  geom_point(data = selected_play_ball,
+             aes(x_loc, y_loc, color = team)) + 
+  geom_point(data = nodes,
+             aes(x_loc, y_loc), color = "red") +
+  scale_color_manual(values = c("Lakers" = "#fdb927",
+                                "Clippers" = "#1D428A",
+                                "ball" = "#FA8320")) +
+  scale_y_reverse()
+```
+
+Given these nodes, we want to find the next spot when the ball stops moving 
+
+1) for every row, find difference in total area 
+
+```{r}
+ball_event2 <- filter(event2_moments, lastname == 'ball')
+ball_event2$area_diff <- 0
+
+for (i in 1:nrow(ball_event2)) {
+  ball_event2$area_diff[i] = sqrt(((ball_event2$x_loc[i+1] - ball_event2$x_loc[i]) ** 2) +
+               ((ball_event2$y_loc[i+1] - ball_event2$y_loc[i]) ** 2) +
+                 ((ball_event2$radius[i+1] - ball_event2$radius[i]) ** 2))
+}
+
+ball_event2$sig_mov <- ball_event2$area_diff > 0.5
+head(ball_event2)
+
+```
+
+
+```{r}
+endnodes_df <- NULL
+for (i in 1:nrow(nodes)) {
+  postnode_df <- ball_event2[ball_event2$game_clock < nodes$game_clock[i], ]
+  endnode <- postnode_df[postnode_df$sig_mov == FALSE,][1,]
+  endnodes_df <- rbind(endnodes_df, endnode)
+}
+
+```
+
+```{r}
+fullcourt() +
+  geom_point(data = selected_play_ball,
+             aes(x_loc, y_loc, color = team)) + 
+  geom_point(data = nodes,
+             aes(x_loc, y_loc), color = "red", size = 4) +
+  geom_point(data = endnodes_df,
+             aes(x_loc, y_loc), color = "green") +
+  scale_color_manual(values = c("Lakers" = "#fdb927",
+                                "Clippers" = "#1D428A",
+                                "ball" = "#FA8320")) +
+  scale_y_reverse()
+```
+
+
+
+
+
+```{r}
+event8_moments = moments %>%
+  filter(event.id == 8)
+
+event8_ball <- filter(event8_moments, lastname == 'ball')
+
+nodes <- get_nodes(selected_play = event8_moments,
+                   event_id = 8)
+
+```
+
+
+```{r}
+fullcourt() +
+  geom_point(data = event8_ball,
+             aes(x_loc, y_loc), color = "orange") + 
+  geom_point(data = nodes,
+             aes(x_loc, y_loc), color = "red") +
+  scale_color_manual(values = c("Lakers" = "#fdb927",
+                                "Clippers" = "#1D428A",
+                                "ball" = "#FA8320")) +
+  scale_y_reverse()
+```
+
+Given these nodes, we want to find the next spot when the ball stops moving 
+
+1) for every row, find difference in total area 
+
+```{r}
+event8_ball$area_diff <- 0
+
+for (i in 1:nrow(event8_ball)) {
+  event8_ball$area_diff[i] = sqrt(((event8_ball$x_loc[i+1] - event8_ball$x_loc[i]) ** 2) +
+               ((event8_ball$y_loc[i+1] - event8_ball$y_loc[i]) ** 2) +
+                 ((event8_ball$radius[i+1] - event8_ball$radius[i]) ** 2))
+}
+
+event8_ball$sig_mov <- event8_ball$area_diff > 0.5
+head(event8_ball)
+
+```
+
+
+```{r}
+endnodes_df <- NULL
+for (i in 1:nrow(nodes)) {
+  postnode_df <- event8_ball[event8_ball$game_clock < nodes$game_clock[i], ]
+  endnode <- postnode_df[postnode_df$sig_mov == FALSE,][1,]
+  endnodes_df <- rbind(endnodes_df, endnode)
+}
+
+```
+
+```{r}
+fullcourt() +
+  geom_point(data = event8_ball,
+             aes(x_loc, y_loc), color = "orange") + 
+  geom_point(data = nodes,
+             aes(x_loc, y_loc), color = "red", size = 3) +
+  geom_point(data = endnodes_df,
+             aes(x_loc, y_loc), color = "green", size = 3) +
+  scale_color_manual(values = c("Lakers" = "#fdb927",
+                                "Clippers" = "#1D428A",
+                                "ball" = "#FA8320")) +
+  scale_y_reverse()
+```
+

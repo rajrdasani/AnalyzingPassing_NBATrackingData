@@ -1,5 +1,5 @@
 ---
-title: "LACatLAL_Analysis"
+title: "LACatLAL_shots"
 output: html_document
 ---
 
@@ -19,9 +19,14 @@ library(ggplot2)
 Load in data
 ```{r}
 lac_lal_movements <- sportvu_convert_json("LACatLAL.json")
-str(lac_lal_movements)
 plays <- read.csv("LACatLAL_playbyplay.csv")
-str(plays)
+```
+
+```{r}
+shots <- read.csv("shot_df.csv")
+lakers_shots <- shots[1:77, ]
+clippers_shots <- shots[78:nrow(shots),]
+
 ```
 
 Combine movements and plays data 
@@ -66,79 +71,60 @@ fulltrack[0:42350, ]$Clippers = 0
 unique(fulltrack$Lakers)
 
 head(fulltrack)
-
-
 ```
 
 Fix margin column
 ```{r}
-fulltrack$SCOREMARGIN = fulltrack$Clippers - fulltrack$Lakers
+fulltrack$SCOREMARGIN = 
+  fulltrack$Clippers - fulltrack$Lakers
 ```
-
-```{r}
-ggplot(fulltrack, aes(SCOREMARGIN)) +
-  geom_histogram(bins = 8)
-```
-
 
 
 
 ```{r}
-library(stringr)
-library(dplyr)
+playbyplay_shots <- 
+  filter(fulltrack, EVENTMSGTYPE %in% c(1,2))
+playbyplay_shots
 
-unique(fulltrack$Play)
 
-shots <- data.frame("shot" = sub("\\'.*", "",
-                shot_condition))
 
-shots$MISS = str_detect(shots$shot, "MISS")
-shots$BLOCK = str_detect(shots$shot, "BLOCK")
-shots$TeamBoolean <- str_detect(shots$shot, "_")
-shots$Team = rep("hi", nrow(shots))
-for (j in 1:nrow(shots)) {
-  if (shots$TeamBoolean[j]) {
-    shots$Team[j] = "Clippers"
-  } else {
-    shots$Team[j] = "Lakers"
-  }
-}
-shots$TeamBoolean <- NULL
-test <- str_remove(shots$shot, "MISS")
-test <- str_remove(test, "_")
-test <- gsub('[[:digit:]]+', '', test)
-shots$Player <- gsub(" ", "", test, fixed = TRUE)
-shots$Distance = as.numeric(gsub(".* ", "", shots$shot))
-shots[shots$Team == "Lakers",]
+lakers_shots_ids <- 
+  unique(filter(playbyplay_shots,
+                PLAYER1_TEAM_NICKNAME =="Lakers")
+         $event.id)
+
+lakers_tracking_shots <- filter(playbyplay_shots, 
+                       event.id %in% lakers_shots_ids)
+
+lakers_shots[duplicated(lakers_shots$description), ]
+
+
+lakers_shots[lakers_shots$description == "Jordan Clarkson  misses 25-foot three point jumper", ]
+
+
+
+
+
+
+
+
+
+
+
+clippers_shots_ids <- 
+  unique(filter(playbyplay_shots,
+                PLAYER1_TEAM_NICKNAME =="Clippers")
+         $event.id)
+
+clippers_tracking_shots <- filter(playbyplay_shots, 
+                       event.id %in% clippers_shots_ids)
+
+
+merge(x = clippers_tracking_shots, y = clippers_shots,
+      by.x = "Play", by.y = "description")
 ```
 
 
-```{r}
 
-sum()
-
-
-length(
-  unique(fulltrack[str_detect(fulltrack$Play, "'") |
-                 str_detect(fulltrack$Play, "Dunk"), ]$Play)
-)
-
-```
-
-
-
-
-
-Presence of the mid-range shot was still there, but not too many long 2s being taken, even in 2015.
-
-```{r}
-ggplot(shots, aes(Distance)) +
-  geom_histogram() +
-  geom_vline(xintercept = 22) +
-  geom_vline(xintercept = 24)
-
-ggplot(shots, aes(Distance)) +
-  geom_histogram(binwidth = 5)
-```
 
 

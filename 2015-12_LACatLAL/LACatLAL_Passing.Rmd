@@ -12,6 +12,8 @@ library(lubridate)
 library(hms)
 source("../RajivFunctions.R")
 source("../fullcourt.R")
+library(sp)
+
 
 
 moments <- sportvu_convert_json("LACatLAL.json")
@@ -79,42 +81,49 @@ moments_with_pbp %>%
   head(n = 15)
 ```
 
+
+By examining the following plot of event 2, we can gain an intuition for the characteristics unique to passing. Passes are relatively easy to spot due to the increase in velocity and the straight path followed
+
+```{r}
+event2_moments = moments %>%
+  filter(game_clock > 696)
+
+ball_distance <- player_dist_matrix(data = event2_moments,
+                                eventID = 2) %>%
+    select(starts_with("ball_"))
+  
+selected_play <- moments_with_pbp %>%
+  filter(event.id == 2) %>%
+  filter(game_clock > 696)
+
+selected_play_ball <- selected_play %>% 
+  filter(event.id == 2, lastname == "ball") %>% 
+  mutate(ball_carrier = 
+           apply(ball_distance, 1, which.min),
+         ball_carrier_dist = 
+             apply(ball_distance, 1, min))
+
+fullcourt() +
+  geom_point(data = selected_play_ball,
+             aes(x_loc, y_loc, color = team)) + 
+  scale_color_manual(values = c("Lakers" = "#fdb927",
+                                "Clippers" = "#1D428A",
+                                "ball" = "#FA8320")) +
+  scale_y_reverse()
+```
+
 # Indentifying Passes
 
 To identify passes in the tracking data, we created a number of additional variables using the **trajr** package. We tracked the instantaneous speed, acceleration, and directional change of the ball. We identified the most likely ball_carrier my measuring the distance between the ball and the players.
 
 ```{r}
 source("../RajivFunctions.R")
+source("get_nodes.R")
 
-ball_distance <- 
-  player_dist_matrix(data = moments, eventID = 2) %>%
-  select(starts_with("ball_"))
+nodes <- get_nodes(moments_data = event2_moments, 
+                   selected_play = selected_play,
+                   event_id = 2)
 
-selected_play <- moments_with_pbp %>% 
-  filter(event.id == 2, lastname == "ball") %>% 
-  mutate(ball_carrier = 
-           apply(ball_distance, 1, which.min),
-         ball_carrier_dist = 
-           apply(ball_distance, 1, min))
-coords <- selected_play %>% 
-  select(x_loc, y_loc, game_clock) %>% 
-  TrajFromCoords(fps = 25)
-traj_data <- coords %>% 
-  mutate(inst_speed = c(NA, TrajDerivatives(coords)[[1]]),
-         inst_acceleration = c(NA, NA, TrajDerivatives(coords)[[3]]),
-         dir_change = c(NA, NA, TrajDirectionalChange(coords)))
-```
-
-By examining the following plot of event 2, we can gain an intuition for the characteristics unique to passing. Passes are relatively easy to spot due to the increase in velocity and the straight path followed
-
-```{r}
-fullcourt() +
-  geom_point(data = selected_play,
-             aes(x_loc, y_loc, color = team)) + 
-  scale_color_manual(values = c("Lakers" = "#fdb927",
-                                "Clippers" = "#1D428A",
-                                "ball" = "#FA8320")) +
-  scale_y_reverse()
 ```
 
 We identified certain "nodes", that is frames that were likely candidates for the beginning of a pass. A frame was classified as a node if:
@@ -128,25 +137,11 @@ We refined our search further by excluding nodes where:
 - The game clock is less than 12:00 (to exclude tap outs from jump balls)
 
 
-```{r}
-nodes <- selected_play %>% 
-  left_join(traj_data, by = c("x_loc" = "x", "y_loc" = "y", "game_clock" = "game_clock")) %>% 
-  unique() %>% 
-  filter(abs(dir_change) > 200 | inst_acceleration > 250) %>% 
-  mutate(next_node_dist = c(sqrt(diff(x_loc)^2 + diff(y_loc)^2), NA))
-nodes <- nodes %>% 
-  mutate(next_node_same_carrier = unlist(
-    lapply(1:nrow(nodes), function(x) nodes[x,]$ball_carrier == nodes[x+1,]$ball_carrier))) %>% 
-  filter(next_node_same_carrier == F,
-         radius < 8,
-         game_clock < 720)
-```
-
 The figure below shows that this method succesfully captured the passes in the first moment. A quick look at subsequent moments shows that some refining is needed.
 
 ```{r}
 fullcourt() +
-  geom_point(data = selected_play,
+  geom_point(data = selected_play_ball,
              aes(x_loc, y_loc, color = team)) + 
   geom_point(data = nodes,
              aes(x_loc, y_loc), color = "red") +
@@ -158,5 +153,137 @@ fullcourt() +
 
 
 
+```{r}
+total <- selected_play
+total$x_loc_r <- total$x_loc
+total$y_loc_r <- total$y_loc
+
+pass_median <- rep(0, nrow(nodes))
+pass_post <- rep(0, nrow(nodes))
+  
+for (i in 1:nrow(nodes)) {
+  if (i < nrow(nodes)) {
+    pass_median[i] <- round((nodes$game_clock[i] +
+                               nodes$game_clock[i + 1]) / 2, 2) 
+    
+    pass_post[i] =
+      selected_play[which.min(abs(selected_play$game_clock - pass_median[i])), ]$game_clock
+      
+    } else {
+      pass_median[i] <- round((nodes$game_clock[i] +                              tail(selected_play_ball[selected_play_ball$radius > 10, ], 1)$game_clock) / 2, 2)
+      pass_post[i] <-
+        selected_play[which.min(abs(selected_play$game_clock - pass_median[i])), ]$game_clock
+    }
+  }
+  
+
+```
+
+```{r}
+for (i in 1:length(passes)) {
+  dplayer <- player_position(event.id = 2, nodes$game_clock[i]) #Gets positions of players
+  dchull <- chull_plot(event.id = 2, nodes$game_clock[i]) #Gets area of convex hull
+  dcentroid <- chull_plot_centroid(event.id = 2, nodes$game_clock[i])
+  
+  print(
+    fullcourt() + 
+    ##Add players
+    geom_point(data=dplayer,
+               aes(x=X, y=Y, group=ID),
+               color=dense_rank(dplayer$ID),
+               size=5) +
+    geom_text(data = dplayer, 
+              aes(label=Name, x = X, y = Y + 3)) + 
+    scale_colour_brewer() +
+    ##Add Convex hull areas
+    geom_polygon(data=dchull,aes(x=X,y=Y,group=ID),
+                 fill=dense_rank(dchull$ID),
+                 alpha = 0.2) + 
+    scale_fill_brewer() + 
+    ##Add Centroids
+    scale_shape_identity() +
+    geom_point(data=dcentroid,aes(x=X,y=Y,group=ID),
+             color=(dcentroid$ID),
+             size=3, shape=8) +
+    #ball
+    geom_point(data = filter(selected_play_ball, game_clock == nodes$game_clock[i]),
+               aes(x = x_loc, y = y_loc),
+               color = "orange",
+               size = 3)
+  )
+
+  
+  dplayer <- player_position(event.id = 2, pass_post[i]) #Gets positions of players
+  dchull <- chull_plot(event.id = 2, pass_post[i])       #Gets area of convex hull
+  dcentroid <- chull_plot_centroid(event.id = 2, pass_post[i])
+  
+  print(
+    fullcourt() + 
+    ##Add players
+    geom_point(data=dplayer,
+               aes(x=X, y=Y, group=ID),
+               color=dense_rank(dplayer$ID),
+               size=5) +
+    geom_text(data = dplayer, 
+              aes(label=Name, x = X, y = Y + 3)) + 
+    scale_colour_brewer() +
+    ##Add Convex hull areas
+    geom_polygon(data=dchull,aes(x=X,y=Y,group=ID),
+                 fill=dense_rank(dchull$ID),
+                 alpha = 0.2) + 
+    scale_fill_brewer() + 
+    ##Add Centroids
+    scale_shape_identity() +
+    geom_point(data=dcentroid,aes(x=X,y=Y,group=ID),
+             color=(dcentroid$ID),
+             size=3, shape=8) +
+    geom_point(data = filter(selected_play_ball, game_clock == pass_post[i]),
+               aes(x = x_loc, y = y_loc),
+               color = "orange",
+               size = 3)
+  )
+}
+
+```
+
+```{r}
+source("passes_areas.R")
+
+passes = c(nodes$game_clock, pass_post)
+passes = passes[c(order(passes))]
+
+court_areas <- 
+  passes_areas(passes = passes,
+    selected_play = selected_play,
+             nodes = nodes)
+court_areas
+
+```
+
+
+```{r}
+fullcourt() + 
+  geom_point(data = court_areas,
+             aes(x = clippers_centroid.1.,
+                 y = clippers_centroid.2.,
+                 label = pass_number), 
+             color = "blue",
+             size = 2) +
+  geom_text(data = court_areas, aes(x = clippers_centroid.1.,
+                                        y = clippers_centroid.2.,
+                                        label = pass_number),
+            vjust = 0, nudge_y = 0.5) +
+  geom_point(data = court_areas,
+             aes(x = lakers_centroid.1.,
+                 y = lakers_centroid.2.,
+                 label = pass_number), 
+             color = "gold",
+             size = 2) +
+  geom_text(data = court_areas, aes(x = lakers_centroid.1.,
+                                    y = lakers_centroid.2.,
+                                    label = pass_number),
+            vjust = 0, nudge_y = 0.5)
+  
+```
 
 

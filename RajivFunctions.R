@@ -173,11 +173,11 @@ chull_areabyteam <- function (total,balltime) {
   return(allsum)
 }        
 
-player_position <- function(eventid,gameclock){
+player_position <- function(event.id,gameclock){
   ##Returns positions of all players at a time
   ##Requires data in total and balltime
   dfall <- total %>% 
-    filter(game_clock == gameclock, event.id == eventid)  %>% 
+    filter(game_clock == gameclock, event.id == event.id)  %>% 
     filter(lastname!="ball") %>% 
     select(lastname,team_id,x_loc_r,y_loc_r) 
     colnames(dfall) <- c('Name','ID','X','Y')

@@ -1,6 +1,8 @@
 ---
 title: "end_nodes"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 
@@ -52,7 +54,8 @@ firstposs_moments_ball$sig_mov <- firstposs_moments_ball$area_diff > 0.5
 ```{r}
 endnodes_df <- NULL
 for (i in 1:nrow(nodes)) {
-  postnode_df <- firstposs_moments_ball[firstposs_moments_ball$game_clock < nodes$game_clock[i] - 0.08, ]
+  postnode_df <- firstposs_moments_ball[firstposs_moments_ball$game_clock < nodes$game_clock[i] - 0.08 &
+                                          firstposs_moments_ball$quarter == nodes$quarter[i], ]
   endnode <- postnode_df[postnode_df$sig_mov == FALSE,][1,]
   endnodes_df <- rbind(endnodes_df, endnode)
 }
@@ -60,18 +63,120 @@ for (i in 1:nrow(nodes)) {
 ```
 
 ```{r}
+nodes$pass_num <- c(1:nrow(nodes))
+endnodes_df$pass_num <- c(1:nrow(nodes))
+```
+
+
+```{r}
 fullcourt() +
   geom_point(data = firstposs_moments_ball,
              aes(x_loc, y_loc, color = team)) + 
   geom_point(data = nodes,
-             aes(x_loc, y_loc), color = "red", size = 4) +
+             aes(x_loc, y_loc), color = "red", size = 3) +
+  geom_text(data = nodes,
+            aes(label=pass_num, x= x_loc, y = y_loc)) +
   geom_point(data = endnodes_df,
-             aes(x_loc, y_loc), color = "green", size = 4) +
+             aes(x_loc, y_loc), color = "green", size = 3) +
+  geom_text(data = endnodes_df,
+            aes(label=pass_num, x= x_loc, y = y_loc)) +
   scale_color_manual(values = c("Lakers" = "#fdb927",
                                 "Clippers" = "#1D428A",
                                 "ball" = "#FA8320")) +
   scale_y_reverse()
 ```
+
+--------------------------------------------------------------------------------------------------------------
+Compare get_nodes and get_nodes_new
+Random Possession: 3rd quarter, start at 7:36 remaining
+
+
+Now lets try it for a random set of times 
+
+```{r}
+randomposs_moments_ball = full_game %>%
+  filter(game_clock < 462, game_clock > 430, quarter == 3) %>%
+  filter(lastname == "ball")
+
+nodes <- get_nodes(randomposs_moments_ball[1,]$frame_num:
+                  randomposs_moments_ball[nrow(randomposs_moments_ball),]$frame_num)
+
+```
+
+
+```{r}
+fullcourt() +
+  geom_point(data = randomposs_moments_ball,
+             aes(x_loc, y_loc, color = team)) + 
+  geom_point(data = nodes,
+             aes(x_loc, y_loc), color = "red") +
+  scale_color_manual(values = c("Lakers" = "#fdb927",
+                                "Clippers" = "#1D428A",
+                                "ball" = "#FA8320")) +
+  scale_y_reverse()
+```
+
+Given these nodes, we want to find the next spot when the ball stops moving 
+
+1) for every row, find difference in total area 
+
+```{r}
+randomposs_moments_ball$area_diff <- 0
+
+for (i in 1:nrow(randomposs_moments_ball)) {
+  randomposs_moments_ball$area_diff[i] = 
+    sqrt(((randomposs_moments_ball$x_loc[i+1] - randomposs_moments_ball$x_loc[i]) ** 2) +
+               ((randomposs_moments_ball$y_loc[i+1] - randomposs_moments_ball$y_loc[i]) ** 2) +
+                 ((randomposs_moments_ball$radius[i+1] - randomposs_moments_ball$radius[i]) ** 2))
+}
+
+randomposs_moments_ball$sig_mov <- randomposs_moments_ball$area_diff > 0.5
+head(randomposs_moments_ball)
+
+```
+
+
+```{r}
+endnodes_df <- NULL
+for (i in 1:nrow(nodes)) {
+  postnode_df <- randomposs_moments_ball[randomposs_moments_ball$game_clock < nodes$game_clock[i] - 0.08, ]
+  endnode <- postnode_df[postnode_df$sig_mov == FALSE,][1,]
+  endnodes_df <- rbind(endnodes_df, endnode)
+}
+
+```
+
+```{r}
+nodes$pass_num <- c(1:nrow(nodes))
+endnodes_df$pass_num <- c(1:nrow(nodes))
+```
+
+
+```{r}
+fullcourt() +
+  geom_point(data = randomposs_moments_ball,
+             aes(x_loc, y_loc, color = team)) + 
+  geom_point(data = nodes,
+             aes(x_loc, y_loc), color = "red", size = 3) +
+  geom_text(data = nodes,
+            aes(label=pass_num, x= x_loc, y = y_loc)) +
+  geom_point(data = endnodes_df,
+             aes(x_loc, y_loc), color = "green", size = 3) +
+  geom_text(data = endnodes_df,
+            aes(label=pass_num, x= x_loc, y = y_loc)) +
+  scale_color_manual(values = c("Lakers" = "#fdb927",
+                                "Clippers" = "#1D428A",
+                                "ball" = "#FA8320")) +
+  scale_y_reverse()
+```
+
+
+
+
+-----------------------------------------
+
+
+
 
 Now lets try it for a random set of times 
 
@@ -152,10 +257,8 @@ fullcourt() +
   scale_y_reverse()
 ```
 
-
+The 6th pass, which seems like it should be pretty clear that it is a pass, is not showing. Something to look into.
 
 
 -----------------------------------------
-
-
 

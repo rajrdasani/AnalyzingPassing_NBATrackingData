@@ -55,7 +55,9 @@ head(all_moments_ball)
 ```{r}
 all_endnodes <- NULL
 for (i in 1:nrow(allnodes)) {
-  postnode_df <- all_moments_ball[all_moments_ball$game_clock < nodes$game_clock[i] - 0.08, ]
+  postnode_df <- all_moments_ball[
+    all_moments_ball$game_clock < all_nodes$game_clock[i] - 0.08 &
+      all_moments_ball$quarter == all_nodes$quarter[i], ]
   endnode <- postnode_df[postnode_df$sig_mov == FALSE,][1,]
   all_endnodes <- rbind(all_endnodes, endnode)
 }
@@ -66,15 +68,15 @@ all_endnodes
 ```{r}
 all_nodes$pass_num <- c(1:nrow(all_nodes))
 all_endnodes$pass_num <- c(1:nrow(all_endnodes))
+```
 
 
+```{r}
 library(data.table)
 all_passes <- rbindlist(list(all_nodes, all_endnodes), fill = TRUE)
 all_passes <- all_passes[order(all_passes$pass_num),]
 all_passes
 ```
-
-
 
 
 

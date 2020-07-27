@@ -139,7 +139,7 @@ head(randomposs_moments_ball)
 ```{r}
 endnodes_df <- NULL
 for (i in 1:nrow(nodes)) {
-  postnode_df <- randomposs_moments_ball[randomposs_moments_ball$game_clock < nodes$game_clock[i] - 0.08, ]
+  postnode_df <- randomposs_moments_ball[randomposs_moments_ball$game_clock < nodes$game_clock[i] - 0.08 & randomposs_moments_ball$quarter == nodes$quarter[i], ]
   endnode <- postnode_df[postnode_df$sig_mov == FALSE,][1,]
   endnodes_df <- rbind(endnodes_df, endnode)
 }
@@ -226,7 +226,7 @@ head(randomposs_moments_ball)
 ```{r}
 endnodes_df <- NULL
 for (i in 1:nrow(nodes)) {
-  postnode_df <- randomposs_moments_ball[randomposs_moments_ball$game_clock < nodes$game_clock[i] - 0.08, ]
+  postnode_df <- randomposs_moments_ball[randomposs_moments_ball$game_clock < nodes$game_clock[i] - 0.08 & randomposs_moments_ball$quarter == nodes$quarter[i], ]
   endnode <- postnode_df[postnode_df$sig_mov == FALSE,][1,]
   endnodes_df <- rbind(endnodes_df, endnode)
 }

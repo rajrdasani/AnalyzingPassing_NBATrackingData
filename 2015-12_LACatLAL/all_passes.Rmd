@@ -10,33 +10,17 @@ library(trajr)
 library(dplyr)
 ```
 
-
-
-
 ```{r}
-all_moments_ball <- full_game %>%
-  filter(lastname == "ball")
-
-lastframe_q1 <- all_moments_ball[all_moments_ball$quarter == 2, ]$frame_num[1] - 1
-lastframe_q2 <- all_moments_ball[all_moments_ball$quarter == 3, ]$frame_num[1] - 1
-lastframe_q3 <- all_moments_ball[all_moments_ball$quarter == 4, ]$frame_num[1] - 1
-lastframe_q4 = nrow(all_moments_ball)
-
-
-nodes_q1 <- get_nodes_new(1:lastframe_q1)
-nodes_q2 <- get_nodes_new(lastframe_q1+1:lastframe_q2)
-nodes_q3 <- get_nodes_new(lastframe_q2+1:lastframe_q3)
-nodes_q4 <- get_nodes_new(lastframe_q3+1:lastframe_q4)
-
-nrow(nodes_q1) + nrow(nodes_q2) + nrow(nodes_q3) + nrow(nodes_q4)
-
-all_nodes <- do.call("rbind", list(nodes_q1, nodes_q2, nodes_q3, nodes_q4))
-
-
+all_nodes <- final_nodes()
+nodes_check <- read.csv("nodes_check.csv")
+all_nodes$is_pass <- nodes_check$is_pass
+all_nodes$description <- nodes_check$description
 ```
 
 
 ```{r}
+all_moments_ball <- full_game[full_game$lastname == "ball", ]
+
 all_moments_ball$area_diff <- 0
 
 for (i in 1:nrow(all_moments_ball)) {
@@ -54,7 +38,7 @@ head(all_moments_ball)
 
 ```{r}
 all_endnodes <- NULL
-for (i in 1:nrow(allnodes)) {
+for (i in 1:nrow(all_nodes)) {
   postnode_df <- all_moments_ball[
     all_moments_ball$game_clock < all_nodes$game_clock[i] - 0.08 &
       all_moments_ball$quarter == all_nodes$quarter[i], ]
@@ -78,8 +62,182 @@ all_passes <- all_passes[order(all_passes$pass_num),]
 all_passes
 ```
 
+```{r}
+all_passes$pass_time <- NA
+
+for (i in 1:(nrow(all_passes)/2)) {
+  if(!is.na(all_passes$is_pass[2*i - 1]) & all_passes$is_pass[2*i - 1] == TRUE) {
+    pass_time <- all_passes$game_clock[2*i-1] -
+                                all_passes$game_clock[2*i]
+    all_passes$pass_time[2*i] <- pass_time
+    all_passes$pass_time[2*i - 1] <- pass_time
+  }
+}
+  
+
+```
 
 
+```{r}
+lakers_players <- unique(fulltrack[fulltrack$team_id == 1610612747, ]$lastname)
+lakers_players <- lakers_players[!is.na(lakers_players)]
+clippers_players <- unique(fulltrack[fulltrack$team_id == 1610612746, ]$lastname)
+clippers_players <- clippers_players[!is.na(clippers_players)]
+
+
+
+for(i in 1:nrow(all_passes)) {
+  if (all_passes$ball_handler[i] %in% lakers_players) {
+    all_passes$team[i] <- "Lakers"
+    all_passes$team[i+1] <- "Lakers"
+  } else if (all_passes$ball_handler[i] %in% clippers_players) {
+    all_passes$team[i] <- "Clippers"
+    all_passes$team[i+1] <- "Clippers"
+  }
+}
+```
+
+```{r}
+ggplot(all_correct_passes, aes(pass_time)) +
+  geom_histogram(bins = 10)
+```
+
+```{r}
+all_correct_passes <- all_passes[all_passes$is_pass,]
+all_correct_endnodes <- all_passes[!is.na(all_passes$pass_time),]
+
+test <- data.frame(x = 1, y = 2)
+
+fullcourt() + 
+  geom_point(data = all_correct_endnodes, aes(x = x_loc, y = y_loc)) +
+  geom_hline(yintercept = 25, color = "purple")
+
+all_passes_halfcourt <- all_passes
+
+for (i in 1:nrow(all_passes_halfcourt)) {
+  if(all_passes_halfcourt$x_loc[i] > 47) {
+    all_passes_halfcourt$x_loc[i] <- 94 - all_passes_halfcourt$x_loc[i]
+    all_passes_halfcourt$y_loc[i] <- 50 - all_passes_halfcourt$y_loc[i]
+  }
+}
+
+
+lakers_HC_nodes <- all_passes_halfcourt[all_passes_halfcourt$team == "Lakers" &
+                                          !is.na(all_passes_halfcourt$time) &
+                                          all_passes_halfcourt$is_pass,]
+clippers_HC_nodes <- all_passes_halfcourt[all_passes_halfcourt$team == "Clippers" &
+                                          !is.na(all_passes_halfcourt$time) &
+                                            all_passes_halfcourt$is_pass,]
+lakers_HC_endnodes <- all_passes_halfcourt[all_passes_halfcourt$team == "Lakers" &
+                                          !is.na(all_passes_halfcourt$pass_time),]
+clippers_HC_endnodes <- all_passes_halfcourt[all_passes_halfcourt$team == "Clippers" &
+                                          !is.na(all_passes_halfcourt$pass_time),]
+```
+
+```{r}
+test <- data.frame(x = 10, y = 1)
+
+library(patchwork)
+
+p1 <- halfcourt() +
+  geom_hex(data = clippers_HC_nodes, aes(x_loc, y_loc), binwidth = c(5,5), alpha = 0.7) +
+  scale_fill_gradient(low = "darkblue", 
+                      high = "darkorange",
+                      limits = c(0,23)) + 
+  theme_bw() + theme(legend.position = "none") +
+  coord_fixed() +
+  ggtitle("Starting Locations")
+
+p2 <- halfcourt() +
+  geom_hex(data = clippers_HC_endnodes, aes(x_loc, y_loc), binwidth = c(5,5), alpha = 0.7) +
+  scale_fill_gradient(low = "darkblue", 
+                      high = "darkorange",
+                      limits = c(0,23)) + 
+  theme_bw() +
+  coord_fixed() +
+  ggtitle("Ending Locations for Clippers passes")
+
+p1+p2
+
+p3 <- halfcourt() +
+  geom_hex(data = lakers_HC_nodes, aes(x_loc, y_loc), binwidth = c(5,5), alpha = 0.7) +
+  scale_fill_gradient(low = "darkblue", 
+                      high = "darkorange") + 
+  theme_bw() + theme(legend.position = "none") +
+  coord_fixed() +
+  ggtitle("Starting Place for Lakers Passes")
+
+p4 <- halfcourt() +
+  geom_hex(data = lakers_HC_endnodes, aes(x_loc, y_loc), binwidth = c(5,5), alpha = 0.7) +
+  scale_fill_gradient(low = "darkblue", 
+                      high = "darkorange") + 
+  theme_bw() + 
+  coord_fixed() +
+  ggtitle("Ending Place for Lakers Passes")
+
+p3+p4
+
+```
+
+
+
+
+----------------
+
+```{r}
+lakers_players <- unique(fulltrack[fulltrack$team_id == 1610612747, ]$lastname)
+lakers_players <- lakers_players[!is.na(lakers_players)]
+clippers_players <- unique(fulltrack[fulltrack$team_id == 1610612746, ]$lastname)
+clippers_players <- clippers_players[!is.na(clippers_players)]
+
+
+for(i in 1:(nrow(all_correct_passes)-1)) {
+  if (all_correct_passes$ball_handler[i] %in% lakers_players) {
+    all_correct_passes$team[i] <- "Lakers"
+    all_correct_passes$team[i+1] <- "Lakers"
+  } else if (all_correct_passes$ball_handler[i] %in% clippers_players) {
+    all_correct_passes$team[i] <- "Clippers"
+    all_correct_passes$team[i+1] <- "Clippers"
+  }
+}
+
+
+test <- all_correct_passes %>%
+  mutate(team_lag = lag(team, 1),
+         change = !(team_lag == team)) %>%
+  select(game_clock, quarter, team, team_lag, change)
+test$change[1] = FALSE
+
+
+poss = 1
+test$poss = NA
+
+for(i in 1:nrow(test)) {
+  if(test$change[i]) {
+    poss = poss + 1
+  }
+  test$poss[i] = poss
+}
+
+
+test %>%
+  group_by(poss, team) %>%
+  summarise(count = n())
+
+shots_only <- filter(fulltrack, EVENTMSGTYPE %in% c(1,2)) %>%
+  arrange(-game_clock, quarter)
+
+
+
+```
+
+```{r}
+.bincode(x = poss for
+         breaks = changes in possession )
+
+https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/.bincode
+
+```
 
 
 

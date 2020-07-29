@@ -56,24 +56,31 @@ get_nodes_new <- function(frames){
            radius < 9,
            game_clock < 720) %>% 
     mutate(next_node_dist = c(sqrt(diff(x_loc)^2 + diff(y_loc)^2), NA)) %>% 
-    filter(next_node_dist > 3)
-  #| is.na(next_node_dist))
+    filter(next_node_dist > 3)# | is.na(next_node_dist))
   
   return(nodes)
 }
-# full_game <- as.data.frame(full_game)
-all_ball_frames <- full_game[full_game$lastname == "ball", ]
-#   
-#   dplyr::filter(data = as_tibble(full_game), lastname == "ball")
-# length(which(full_game$lastname == "ball"))
 
-partitions <- c(seq(from = 1, to = nrow(all_ball_frames), by = 5000), nrow(all_ball_frames))
-nodes_dfs <- list()
-for(i in 1:length(partitions)){
-  nodes_dfs[[i]] <- get_nodes_new(partitions[i]:partitions[i + 1])
+all_ball_frames <- full_game[full_game$lastname == "ball", ]
+
+
+final_nodes <- function() {
+  lastframe_q1 <- all_ball_frames[all_ball_frames$quarter == 2, ]$frame_num[1] - 1
+  lastframe_q2 <- all_ball_frames[all_ball_frames$quarter == 3, ]$frame_num[1] - 1
+  lastframe_q3 <- all_ball_frames[all_ball_frames$quarter == 4, ]$frame_num[1] - 1
+  lastframe_q4 = nrow(all_ball_frames)
+  
+  
+  nodes_q1 <- get_nodes_new(1:lastframe_q1)
+  nodes_q2 <- get_nodes_new(lastframe_q1+1:lastframe_q2)
+  nodes_q3 <- get_nodes_new(lastframe_q2+1:lastframe_q3)
+  nodes_q4 <- get_nodes_new(lastframe_q3+1:lastframe_q4)
+  
+  all_nodes <- do.call("rbind", list(nodes_q1, nodes_q2, nodes_q3, nodes_q4))
+  
+  return(all_nodes)
 }
 
 
 
-nodes <- bind_rows(nodes_dfs) %>% 
-  filter(dir_change < 2000)
+

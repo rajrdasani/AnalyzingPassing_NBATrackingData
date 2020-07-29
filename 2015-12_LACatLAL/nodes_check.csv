@@ -1,0 +1,683 @@
+,lastname,game_clock,quarter,is_pass,description,frame_num,dist_to_ball,ball_handler
+1,ball,11:55.2,1,TRUE,,120,0,Williams
+2,ball,11:53.1,1,TRUE,,171,0,Bryant
+3,ball,11:51.7,1,TRUE,,205,0,Nance Jr.
+4,ball,11:49.6,1,TRUE,,258,0,Clarkson
+5,ball,11:38.3,1,FALSE,Shot,537,0,Nance Jr.
+6,ball,11:36.2,1,TRUE,,590,0,Jordan
+7,ball,11:26.4,1,TRUE,,833,0,Paul
+8,ball,11:17.2,1,TRUE,Inbound,1061,0,Nance Jr.
+9,ball,11:11.0,1,TRUE,,1214,0,Williams
+10,ball,11:06.9,1,TRUE,,1316,0,Clarkson
+11,ball,11:05.5,1,FALSE,Shot,1349,0,Hibbert
+12,ball,11:04.0,1,TRUE,Inbound,1386,0,Griffin
+13,ball,10:49.5,1,TRUE,,1747,0,Paul
+14,ball,10:48.1,1,FALSE,Shot,1780,0,Redick
+15,ball,10:45.1,1,TRUE,,1855,0,Nance Jr.
+16,ball,10:37.4,1,TRUE,,2045,0,Bryant
+17,ball,10:35.2,1,TRUE,Bad pass,2100,0,Nance Jr.
+18,ball,10:34.2,1,,Deflection,2124,0,Mbah a Moute
+19,ball,10:32.5,1,TRUE,,2166,0,Paul
+20,ball,10:32.1,1,FALSE,Attempted Steal,2177,0,Clarkson
+21,ball,10:28.9,1,TRUE,Followed by unrecorded Griffin pass interrupted by Nance kickball,2257,0,Redick
+22,ball,10:14.5,1,TRUE,Missed inbounds from Redick and Nance,2620,0,Clarkson
+23,ball,10:08.7,1,TRUE,,2765,0,Nance Jr.
+24,ball,10:04.0,1,TRUE,Bad pass,2883,0,Bryant
+25,ball,10:03.6,1,FALSE,Traffic,2892,0,Mbah a Moute
+26,ball,10:01.9,1,TRUE,,2935,0,Paul
+27,ball,09:57.3,1,FALSE,Traffic,3051,0,Hibbert
+28,ball,09:55.0,1,TRUE,Inbound,3107,0,Nance Jr.
+29,ball,09:51.0,1,TRUE,,3207,0,Williams
+30,ball,09:49.9,1,FALSE,,3235,0,Jordan
+31,ball,09:46.9,1,TRUE,Inbound,3311,0,Griffin
+32,ball,09:38.1,1,FALSE,Shot,3530,0,Paul
+33,ball,09:30.7,1,TRUE,Inbound,3716,0,Hibbert
+34,ball,09:19.0,1,TRUE,,4008,0,Williams
+35,ball,09:16.6,1,TRUE,Belongs to Kobe,4069,0,Mbah a Moute
+36,ball,09:13.2,1,TRUE,,4155,0,Hibbert
+37,ball,09:12.4,1,FALSE,Traffic,4174,0,Mbah a Moute
+38,ball,09:11.3,1,TRUE,,4201,0,Bryant
+39,ball,09:11.2,1,FALSE,Traffic,4205,0,Jordan
+40,ball,09:09.7,1,FALSE,Shot,4242,0,Hibbert
+41,ball,09:08.4,1,TRUE,Inbound,4273,0,Griffin
+42,ball,08:56.4,1,TRUE,,4575,0,Paul
+43,ball,08:52.5,1,TRUE,,4672,0,Redick
+44,ball,08:51.5,1,TRUE,,4696,0,Griffin
+45,ball,08:47.9,1,FALSE,Handed to Hibbert for inbound,4786,0,Clarkson
+46,ball,08:46.1,1,TRUE,Inbound,4833,0,Hibbert
+47,ball,08:38.6,1,TRUE,,5020,0,Clarkson
+48,ball,08:37.4,1,FALSE,Shot,5049,0,Hibbert
+49,ball,08:34.8,1,TRUE,Inbound,5115,0,Griffin
+50,ball,08:25.1,1,TRUE,,5358,0,Paul
+51,ball,08:24.1,1,FALSE,Shot,5382,0,Redick
+52,ball,08:19.2,1,TRUE,Inbound,5504,0,Nance Jr.
+53,ball,08:10.7,1,TRUE,Bad pass,5717,0,Clarkson
+54,ball,08:10.0,1,FALSE,Traffic,5734,0,Hibbert
+55,ball,08:06.0,1,TRUE,,5835,0,Redick
+56,ball,07:59.6,1,TRUE,Belongs to Paul,5995,0,Clarkson
+57,ball,07:58.3,1,TRUE,Belongs to Griffin,6027,0,Bryant
+58,ball,07:57.4,1,TRUE,,6050,0,Mbah a Moute
+59,ball,07:50.0,1,FALSE,Traffic - Missed inbound by Nance,6235,0,Jordan
+60,ball,07:45.3,1,TRUE,,6354,0,Clarkson
+61,ball,07:42.1,1,TRUE,,6434,0,Bryant
+62,ball,07:40.6,1,TRUE,,6471,0,Williams
+63,ball,07:40.1,1,TRUE,,6484,0,Nance Jr.
+64,ball,07:28.1,1,TRUE,,6769,0,Paul
+65,ball,07:26.3,1,FALSE,Shot,6814,0,Redick
+66,ball,07:24.7,1,TRUE,Inbound,6854,0,Nance Jr.
+67,ball,07:17.0,1,TRUE,,7048,0,Clarkson
+68,ball,07:08.6,1,TRUE,,7260,0,Jordan
+69,ball,06:59.4,1,TRUE,,7492,0,Paul
+70,ball,06:58.1,1,TRUE,,7523,0,Griffin
+71,ball,06:53.2,1,FALSE,Shot,7646,0,Paul
+72,ball,06:50.6,1,TRUE,Inbound,7712,0,Nance Jr.
+73,ball,06:35.5,1,TRUE,,8092,0,Williams
+74,ball,06:33.2,1,TRUE,Missed pass from Hibbert,8150,0,Nance Jr.
+75,ball,06:32.9,1,FALSE,,8158,0,Griffin
+76,ball,06:24.2,1,TRUE,Missed pass from Griffin,8377,0,Paul
+77,ball,06:19.5,1,FALSE,Shot,8495,0,Redick
+78,ball,06:11.4,1,TRUE,,8685,0,Clarkson
+79,ball,06:06.0,1,FALSE,Shot,8821,0,Williams
+80,ball,05:55.8,1,TRUE,Inbound,9078,0,Griffin
+81,ball,05:44.6,1,TRUE,,9361,0,Paul
+82,ball,05:33.8,1,TRUE,,9683,0,Bryant
+83,ball,05:33.7,1,FALSE,Traffic,9691,0,Jordan
+84,ball,05:33.4,1,FALSE,Deflection,9707,0,Hibbert
+85,ball,05:33.0,1,FALSE,Traffic,9723,0,Jordan
+86,ball,05:27.1,1,FALSE,Reach-in,10025,0,Nance Jr.
+87,ball,05:25.5,1,FALSE,Reach-in,10101,0,Griffin
+88,ball,05:23.0,1,TRUE,,10163,0,Paul
+89,ball,05:09.1,1,TRUE,,10518,0,Russell
+90,ball,05:05.4,1,TRUE,,10610,0,Williams
+91,ball,05:04.3,1,TRUE,,10636,0,Randle
+92,ball,05:02.1,1,FALSE,Shot,10691,0,Russell
+93,ball,04:52.4,1,TRUE,,10931,0,Paul
+94,ball,04:49.6,1,TRUE,Handoff,11001,0,Griffin
+95,ball,04:48.6,1,TRUE,,11026,0,Redick
+96,ball,04:45.4,1,FALSE,Made shot,11104,0,Jordan
+97,ball,04:42.6,1,TRUE,Inbound,11173,0,Hibbert
+98,ball,04:35.0,1,TRUE,,11362,0,Russell
+99,ball,04:32.2,1,TRUE,,11431,0,Hibbert
+100,ball,04:30.6,1,FALSE,Shot,11470,0,Randle
+101,ball,04:27.9,1,TRUE,,11537,0,Jordan
+102,ball,04:20.2,1,TRUE,,11729,0,Paul
+103,ball,04:15.2,1,TRUE,Bad pass,11853,0,Griffin
+104,ball,04:14.4,1,TRUE,,11871,0,Hibbert
+105,ball,04:11.2,1,TRUE,,11950,0,Russell
+106,ball,04:09.6,1,FALSE,Shot,11989,0,Bryant
+107,ball,04:01.7,1,TRUE,Bad pass,12186,0,Griffin
+108,ball,04:00.1,1,FALSE,Received bad pass out of bounds,12225,0,Redick
+109,ball,03:55.1,1,TRUE,,12360,0,Russell
+110,ball,03:53.2,1,TRUE,,12408,0,Williams
+111,ball,03:47.6,1,TRUE,Belongs to Kobe,12547,0,Mbah a Moute
+112,ball,03:45.4,1,FALSE,Shot,12603,0,Hibbert
+113,ball,03:43.2,1,TRUE,,12658,0,Jordan
+114,ball,03:30.5,1,TRUE,,12977,0,Randle
+115,ball,03:29.2,1,FALSE,Traffic,13011,0,Russell
+116,ball,03:15.7,1,FALSE,Shot,13350,0,Russell
+117,ball,03:12.0,1,TRUE,,13442,0,Griffin
+118,ball,03:08.9,1,FALSE,Traffic,13521,0,Griffin
+119,ball,02:46.3,1,FALSE,Shot - Missed inbound by Randle,14087,0,Russell
+120,ball,02:35.3,1,TRUE,Missed inbounds by Russell and Jordan,14365,0,Randle
+121,ball,02:30.1,1,TRUE,,14496,0,Russell
+122,ball,02:27.6,1,TRUE,,14557,0,Bryant
+123,ball,02:25.4,1,TRUE,Belongs to Randle,14612,0,Griffin
+124,ball,02:24.6,1,TRUE,,14634,0,Hibbert
+125,ball,02:20.6,1,TRUE,,14733,0,Williams
+126,ball,02:19.3,1,FALSE,Shot,14767,0,Russell
+127,ball,02:17.8,1,TRUE,Inbound,14804,0,Crawford
+128,ball,02:14.4,1,TRUE,,14889,0,Griffin
+129,ball,02:11.0,1,FALSE,Whistle,14974,0,Paul
+130,ball,02:09.2,1,,,15004,0,Prigioni
+131,ball,02:08.0,1,TRUE,,15062,0,Aldrich
+132,ball,02:07.7,1,FALSE,Traffic,15074,0,Bass
+133,ball,02:05.6,1,FALSE,Shot,15180,0,Griffin
+134,ball,02:04.7,1,FALSE,Traffic,15224,0,Randle
+135,ball,02:03.7,1,TRUE,,15274,0,Griffin
+136,ball,02:01.7,1,FALSE,Deflection - Missed inbound,15370,0,Randle
+137,ball,01:55.8,1,FALSE,,15662,0,Randle
+138,ball,01:55.0,1,TRUE,Inbound,15704,0,Russell
+139,ball,01:51.2,1,TRUE,,15855,0,Williams
+140,ball,01:47.9,1,TRUE,,15936,0,Russell
+141,ball,01:44.8,1,FALSE,Shot - Missed inbound by Randle,16014,0,Williams
+142,ball,01:40.4,1,TRUE,Missed inbound,16108,0,Prigioni
+143,ball,01:36.6,1,TRUE,,16204,0,Aldrich
+144,ball,01:32.6,1,FALSE,Pump fake,16304,0,Crawford
+145,ball,01:31.2,1,FALSE,Traffic,16339,0,Russell
+146,ball,01:24.2,1,TRUE,Missed inbound by Randle,16514,0,Russell
+147,ball,01:23.7,1,FALSE,Traffic,16527,0,Russell
+148,ball,01:21.3,1,TRUE,,16587,0,Williams
+149,ball,01:16.6,1,TRUE,,16704,0,Russell
+150,ball,01:09.4,1,TRUE,Bad pass,16884,0,Crawford
+151,ball,01:04.1,1,TRUE,Double-dribble,17016,0,Russell
+152,ball,01:00.2,1,TRUE,,17118,0,Prigioni
+153,ball,00:51.7,1,FALSE,Shot,17342,0,Prigioni
+154,ball,00:44.3,1,TRUE,Missed inbound by Randle,17530,0,Russell
+155,ball,00:42.4,1,TRUE,,17577,0,Young
+156,ball,00:39.8,1,FALSE,Walk,17642,0,Randle
+157,ball,00:35.8,1,TRUE,,17745,0,Prigioni
+158,ball,00:29.8,1,TRUE,,17891,0,Young
+159,ball,00:17.1,1,FALSE,Traffic,18208,0,Williams
+160,ball,00:17.0,1,FALSE,Traffic,18210,0,Bass
+161,ball,00:15.8,1,FALSE,Traffic,18242,0,Prigioni
+162,ball,00:13.4,1,TRUE,,18302,0,Williams
+163,ball,00:13.2,1,FALSE,Traffic,18306,0,Prigioni
+164,ball,00:11.8,1,FALSE,Traffic - Missed 2 inbounds and 1 other pass,18342,0,Aldrich
+165,ball,11:38.2,2,TRUE,Missing first play of quarter,19172,0,Russell
+166,ball,11:36.8,2,FALSE,Shot,19206,0,Young
+167,ball,11:34.2,2,FALSE,,19271,0,Aldrich
+168,ball,11:32.6,2,TRUE,,19310,0,Prigioni
+169,ball,11:30.4,2,TRUE,,19363,0,Crawford
+170,ball,11:29.2,2,TRUE,,19394,0,Pierce
+171,ball,11:25.4,2,TRUE,,19488,0,Prigioni
+172,ball,11:24.3,2,TRUE,,19516,0,Pierce
+173,ball,11:23.9,2,FALSE,Shot,19525,0,Russell
+174,ball,11:17.4,2,TRUE,Inbound,19687,0,Randle
+175,ball,11:06.5,2,TRUE,,19957,0,Clarkson
+176,ball,10:58.8,2,TRUE,,20146,0,Randle
+177,ball,10:57.6,2,FALSE,Shot,20178,0,Russell
+178,ball,10:53.9,2,TRUE,Inbound,20269,0,Aldrich
+179,ball,10:48.3,2,TRUE,,20407,0,Prigioni
+180,ball,10:46.4,2,TRUE,,20453,0,Pierce
+181,ball,10:46.3,2,FALSE,Traffic,20457,0,Randle
+182,ball,10:45.1,2,TRUE,,20486,0,Aldrich
+183,ball,10:40.6,2,TRUE,,20599,0,Randle
+184,ball,10:35.1,2,FALSE,Reach-in,20735,0,Clarkson
+185,ball,10:35.0,2,FALSE,Reach-in,20738,0,Clarkson
+186,ball,10:28.3,2,TRUE,,20912,0,Russell
+187,ball,10:27.6,2,FALSE,Loose Ball,20931,0,Bass
+188,ball,10:27.1,2,FALSE,Loose Ball,20944,0,Aldrich
+189,ball,10:26.3,2,FALSE,Loose Ball,20964,0,Crawford
+190,ball,10:25.0,2,FALSE,Loose Ball,20999,0,Clarkson
+191,ball,10:23.4,2,TRUE,,21040,0,Young
+192,ball,10:14.0,2,TRUE,,21277,0,Prigioni
+193,ball,10:11.8,2,TRUE,,21332,0,Aldrich
+194,ball,10:06.2,2,TRUE,,21472,0,Stephenson
+195,ball,10:04.8,2,FALSE,Shot,21507,0,Pierce
+196,ball,10:00.3,2,FALSE,Loose Ball,21619,0,Bass
+197,ball,10:00.0,2,FALSE,Loose Ball,21628,0,Prigioni
+198,ball,09:56.6,2,TRUE,,21711,0,Clarkson
+199,ball,09:54.6,2,FALSE,,21762,0,Pierce
+200,ball,09:48.5,2,TRUE,,21916,0,Prigioni
+201,ball,09:47.6,2,TRUE,,21939,0,Pierce
+202,ball,09:46.8,2,TRUE,,21958,0,Stephenson
+203,ball,09:44.6,2,TRUE,,22014,0,Prigioni
+204,ball,09:39.2,2,FALSE,Shot - Two missed passes,22150,0,Stephenson
+205,ball,09:33.9,2,TRUE,,22283,0,Randle
+206,ball,09:29.4,2,TRUE,,22395,0,Russell
+207,ball,09:29.2,2,FALSE,Loose Ball,22399,0,Crawford
+208,ball,09:27.1,2,FALSE,Traffic,22454,0,Bass
+209,ball,09:26.3,2,TRUE,,22473,0,Bass
+210,ball,09:25.1,2,FALSE,Shot,22503,0,Young
+211,ball,09:16.4,2,TRUE,,22724,0,Clarkson
+212,ball,09:05.1,2,FALSE,Shot,23001,0,Russell
+213,ball,09:03.7,2,FALSE,,23036,0,Bass
+214,ball,08:45.9,2,TRUE,Belongs to Prigioni,23475,0,Bass
+215,ball,08:40.3,2,TRUE,,23611,0,Russell
+216,ball,08:35.8,2,TRUE,,23722,0,Clarkson
+217,ball,08:24.4,2,TRUE,Missing about 10 seconds of passes,24019,0,Bryant
+218,ball,08:07.0,2,TRUE,,24455,0,Prigioni
+219,ball,08:04.6,2,TRUE,,24516,0,Crawford
+220,ball,08:03.4,2,TRUE,,24547,0,Prigioni
+221,ball,07:59.8,2,TRUE,,24635,0,Pierce
+222,ball,07:58.7,2,FALSE,Traffic,24663,0,Clarkson
+223,ball,07:56.4,2,FALSE,Traffic,24721,0,Bryant
+224,ball,07:55.2,2,TRUE,Inbound,24751,0,Bass
+225,ball,07:50.1,2,TRUE,,24878,0,Russell
+226,ball,07:48.1,2,FALSE,Traffic,24930,0,Stephenson
+227,ball,07:46.5,2,TRUE,,24970,0,Bryant
+228,ball,07:43.8,2,TRUE,,25036,0,Russell
+229,ball,07:42.4,2,TRUE,Inbound,25072,0,Bryant
+230,ball,07:38.6,2,TRUE,,25165,0,Russell
+231,ball,07:37.8,2,TRUE,,25188,0,Bass
+232,ball,07:36.1,2,FALSE,Shot,25232,0,Randle
+233,ball,07:32.5,2,TRUE,,25328,0,Crawford
+234,ball,07:31.0,2,TRUE,,25368,0,Paul
+235,ball,07:30.0,2,TRUE,,25394,0,Crawford
+236,ball,07:28.9,2,FALSE,Shot,25423,0,Johnson
+237,ball,07:25.1,2,TRUE,,25509,0,Paul
+238,ball,07:14.8,2,TRUE,Bad pass,25752,0,Clarkson
+239,ball,07:12.8,2,TRUE,,25801,0,Johnson
+240,ball,07:10.7,2,FALSE,Traffic,25852,0,Clarkson
+241,ball,07:10.0,2,FALSE,Traffic,25869,0,Russell
+242,ball,07:03.5,2,TRUE,,26037,0,Russell
+243,ball,07:02.2,2,FALSE,Shot,26070,0,Bryant
+244,ball,06:50.2,2,TRUE,,26368,0,Crawford
+245,ball,06:48.9,2,TRUE,,26399,0,Griffin
+246,ball,06:43.8,2,TRUE,,26527,0,Crawford
+247,ball,06:38.7,2,TRUE,,26653,0,Griffin
+248,ball,06:36.1,2,TRUE,,26719,0,Paul
+249,ball,06:32.8,2,TRUE,,26801,0,Griffin
+250,ball,06:25.3,2,FALSE,Shot,26987,0,Paul
+251,ball,06:23.6,2,TRUE,Inbound,27029,0,Hibbert
+252,ball,06:14.3,2,TRUE,,27261,0,Russell
+253,ball,06:11.6,2,TRUE,,27327,0,Clarkson
+254,ball,06:11.2,2,FALSE,Traffic,27336,0,Griffin
+255,ball,06:10.4,2,FALSE,Shot,27357,0,Hibbert
+256,ball,06:01.0,2,FALSE,Shot,27590,0,Paul
+257,ball,05:49.7,2,TRUE,,27881,0,Hibbert
+258,ball,05:43.3,2,TRUE,,28044,0,Clarkson
+259,ball,05:39.2,2,TRUE,,28146,0,Nance Jr.
+260,ball,05:30.8,2,TRUE,,28356,0,Paul
+261,ball,05:29.2,2,FALSE,Shot,28398,0,Johnson
+262,ball,05:27.8,2,FALSE,Traffic,28432,0,Nance Jr.
+263,ball,05:24.1,2,TRUE,Inbound,28525,0,Bryant
+264,ball,05:15.5,2,TRUE,,28742,0,Clarkson
+265,ball,05:12.5,2,TRUE,,28818,0,Nance Jr.
+266,ball,05:11.3,2,FALSE,Shot,28848,0,Bryant
+267,ball,05:09.8,2,TRUE,,28878,0,Jordan
+268,ball,05:03.8,2,TRUE,,29030,0,Redick
+269,ball,05:02.3,2,TRUE,,29069,0,Jordan
+270,ball,04:58.4,2,TRUE,,29167,0,Paul
+271,ball,04:51.4,2,TRUE,,29347,0,Hibbert
+272,ball,04:46.4,2,FALSE,Shot,29474,0,Bryant
+273,ball,04:34.7,2,TRUE,,29772,0,Paul
+274,ball,04:32.4,2,FALSE,Shot,29830,0,Redick
+275,ball,04:22.9,2,TRUE,,30207,0,Clarkson
+276,ball,04:22.2,2,FALSE,Traffic,30223,0,Paul
+277,ball,04:21.9,2,FALSE,Loose Ball,30230,0,Williams
+278,ball,04:21.6,2,FALSE,Loose Ball,30238,0,Paul
+279,ball,04:19.1,2,TRUE,,30283,0,Nance Jr.
+280,ball,04:14.1,2,TRUE,,30504,0,Jordan
+281,ball,04:09.6,2,TRUE,,30651,0,Paul
+282,ball,04:08.8,2,TRUE,,30669,0,Redick
+283,ball,04:06.7,2,FALSE,Shot,30718,0,Griffin
+284,ball,04:06.0,2,FALSE,Traffic,30735,0,Nance Jr.
+285,ball,04:00.2,2,TRUE,Inbound,30881,0,Nance Jr.
+286,ball,03:55.2,2,TRUE,,31004,0,Williams
+287,ball,03:46.6,2,FALSE,Shot,31218,0,Bryant
+288,ball,03:44.1,2,FALSE,,31280,0,Nance Jr.
+289,ball,03:37.4,2,TRUE,,31453,0,Hibbert
+290,ball,03:30.0,2,FALSE,Shot,31639,0,Clarkson
+291,ball,03:24.7,2,TRUE,Inbound,31769,0,Griffin
+292,ball,03:19.0,2,TRUE,,31911,0,Paul
+293,ball,03:16.8,2,TRUE,,31965,0,Redick
+294,ball,03:12.1,2,FALSE,Traffic,32081,0,Nance Jr.
+295,ball,03:08.6,2,TRUE,,32170,0,Hibbert
+296,ball,03:06.9,2,TRUE,,32212,0,Bryant
+297,ball,03:01.4,2,FALSE,Shot,32347,0,Williams
+298,ball,02:58.5,2,TRUE,,32419,0,Jordan
+299,ball,02:48.3,2,TRUE,,32672,0,Griffin
+300,ball,02:46.1,2,TRUE,,32727,0,Paul
+301,ball,02:45.2,2,TRUE,,32750,0,Griffin
+302,ball,02:44.2,2,TRUE,Lob,32775,0,Paul
+303,ball,02:42.0,2,FALSE,Traffic,32829,0,Nance Jr.
+304,ball,02:40.0,2,TRUE,,32880,0,Griffin
+305,ball,02:38.0,2,FALSE,Shot,32931,0,Paul
+306,ball,02:29.9,2,TRUE,,33140,0,Clarkson
+307,ball,02:28.7,2,TRUE,,33167,0,Hibbert
+308,ball,02:26.9,2,FALSE,Traffic,33212,0,Clarkson
+309,ball,02:26.3,2,TRUE,,33228,0,Jordan
+310,ball,02:24.4,2,TRUE,,33276,0,Paul
+311,ball,02:24.0,2,FALSE,Traffic,33285,0,Bryant
+312,ball,02:22.9,2,TRUE,,33314,0,Griffin
+313,ball,02:17.3,2,TRUE,,33454,0,Mbah a Moute
+314,ball,02:08.6,2,TRUE,Inbound,33674,0,Nance Jr.
+315,ball,02:01.2,2,FALSE,Shot,33860,0,Williams
+316,ball,01:58.0,2,TRUE,,33939,0,Griffin
+317,ball,01:53.7,2,TRUE,,34056,0,Redick
+318,ball,01:53.1,2,FALSE,Traffic,34086,0,Williams
+319,ball,01:52.1,2,FALSE,Traffic,34138,0,Redick
+320,ball,01:52.1,2,FALSE,Traffic,34141,0,Redick
+321,ball,01:51.9,2,FALSE,Traffic,34147,0,Clarkson
+322,ball,01:51.8,2,FALSE,Traffic,34156,0,Clarkson
+323,ball,01:50.5,2,FALSE,Shot,34188,0,Jordan
+324,ball,01:49.2,2,FALSE,Traffic,34223,0,Hibbert
+325,ball,01:47.3,2,FALSE,Shot,34309,0,Jordan
+326,ball,01:42.2,2,TRUE,,34434,0,Clarkson
+327,ball,01:35.4,2,TRUE,,34609,0,Bryant
+328,ball,01:33.6,2,FALSE,Traffic,34655,0,Paul
+329,ball,01:27.9,2,FALSE,Traffic,34801,0,Griffin
+330,ball,01:27.0,2,FALSE,Traffic,34823,0,Griffin
+331,ball,01:25.4,2,FALSE,Traffic,34864,0,Bryant
+332,ball,01:17.3,2,TRUE,Bad pass,35071,0,Mbah a Moute
+333,ball,01:05.5,2,FALSE,Traffic,35653,0,Clarkson
+334,ball,01:05.1,2,FALSE,Traffic,35669,0,Jordan
+335,ball,01:04.9,2,FALSE,Traffic,35683,0,Clarkson
+336,ball,01:04.0,2,FALSE,Traffic,35727,0,Griffin
+337,ball,00:37.4,2,TRUE,,36391,0,Jordan
+338,ball,00:36.2,2,FALSE,Deflection,36421,0,Williams
+339,ball,00:28.9,2,TRUE,,36608,0,Clarkson
+340,ball,00:27.9,2,FALSE,Shot,36632,0,Hibbert
+341,ball,00:23.3,2,TRUE,,36746,0,Crawford
+342,ball,00:07.6,2,TRUE,,37137,0,Paul
+343,ball,00:06.5,2,TRUE,,37164,0,Griffin
+344,ball,00:05.1,2,FALSE,Shot,37199,0,Mbah a Moute
+345,ball,11:58.5,3,TRUE,,37359,0,Paul
+346,ball,11:57.4,3,TRUE,,37385,0,Griffin
+347,ball,11:56.1,3,TRUE,,37417,0,Mbah a Moute
+348,ball,11:55.0,3,TRUE,,37444,0,Paul
+349,ball,11:53.1,3,TRUE,,37492,0,Jordan
+350,ball,11:51.0,3,TRUE,,37543,0,Redick
+351,ball,11:41.8,3,TRUE,,37769,0,Clarkson
+352,ball,11:38.1,3,TRUE,,37860,0,Bryant
+353,ball,11:35.6,3,TRUE,,37921,0,Nance Jr.
+354,ball,11:34.2,3,FALSE,Shot,37956,0,Bryant
+355,ball,11:30.9,3,TRUE,Inbound,38037,0,Jordan
+356,ball,11:25.2,3,TRUE,,38176,0,Paul
+357,ball,11:24.1,3,TRUE,,38204,0,Griffin
+358,ball,11:22.8,3,TRUE,,38236,0,Mbah a Moute
+359,ball,11:20.5,3,TRUE,,38293,0,Paul
+360,ball,11:16.7,3,TRUE,,38385,0,Griffin
+361,ball,11:15.1,3,FALSE,Shot,38426,0,Redick
+362,ball,11:02.4,3,TRUE,,38743,0,Paul
+363,ball,11:00.9,3,FALSE,Traffic,38781,0,Redick
+364,ball,11:00.0,3,TRUE,,38805,0,Hibbert
+365,ball,10:55.8,3,FALSE,Traffic,38911,0,Clarkson
+366,ball,10:55.5,3,FALSE,Traffic,38918,0,Jordan
+367,ball,10:54.6,3,TRUE,Lob,38943,0,Clarkson
+368,ball,10:49.7,3,TRUE,,39050,0,Paul
+369,ball,10:46.2,3,TRUE,,39137,0,Redick
+370,ball,10:43.9,3,TRUE,,39195,0,Paul
+371,ball,10:42.6,3,FALSE,Shot,39226,0,Mbah a Moute
+372,ball,10:32.0,3,TRUE,,39491,0,Williams
+373,ball,10:25.6,3,TRUE,,39650,0,Hibbert
+374,ball,10:23.2,3,TRUE,,39710,0,Bryant
+375,ball,10:22.7,3,FALSE,Deflection,39722,0,Mbah a Moute
+376,ball,10:22.3,3,FALSE,Deflection,39732,0,Jordan
+377,ball,10:16.5,3,TRUE,,39877,0,Paul
+378,ball,09:59.4,3,TRUE,,40304,0,Bryant
+379,ball,09:59.0,3,FALSE,Traffic,40314,0,Nance Jr.
+380,ball,09:43.0,3,FALSE,Traffic,40713,0,Clarkson
+381,ball,09:42.4,3,FALSE,Traffic,40727,0,Nance Jr.
+382,ball,09:38.1,3,TRUE,,40836,0,Clarkson
+383,ball,09:31.5,3,TRUE,,41000,0,Bryant
+384,ball,09:30.3,3,FALSE,Shot,41031,0,Hibbert
+385,ball,09:15.9,3,TRUE,,41389,0,Paul
+386,ball,09:14.7,3,TRUE,,41420,0,Griffin
+387,ball,09:13.4,3,FALSE,Shot,41451,0,Mbah a Moute
+388,ball,09:08.0,3,TRUE,,41585,0,Nance Jr.
+389,ball,08:59.1,3,TRUE,,41808,0,Clarkson
+390,ball,08:58.3,3,FALSE,Traffic,41829,0,Williams
+391,ball,08:33.4,3,TRUE,,42020,0,Clarkson
+392,ball,08:26.8,3,TRUE,,42178,0,Hibbert
+393,ball,08:20.4,3,FALSE,Traffic,42338,0,Mbah a Moute
+394,ball,08:09.2,3,TRUE,Bad pass,42616,0,Paul
+395,ball,08:03.3,3,TRUE,,42765,0,Bryant
+396,ball,08:02.7,3,FALSE,Deflection,42780,0,Mbah a Moute
+397,ball,07:59.0,3,TRUE,,42872,0,Griffin
+398,ball,07:55.5,3,TRUE,,42960,0,Paul
+399,ball,07:53.9,3,TRUE,,43001,0,Mbah a Moute
+400,ball,07:52.7,3,FALSE,Shot,43031,0,Redick
+401,ball,07:51.1,3,FALSE,,43070,0,Bryant
+402,ball,07:51.0,3,FALSE,,43075,0,Bryant
+403,ball,07:24.3,3,TRUE,,43745,0,Paul
+404,ball,07:22.6,3,TRUE,,43790,0,Griffin
+405,ball,07:20.5,3,TRUE,,43842,0,Paul
+406,ball,07:18.4,3,TRUE,,43894,0,Griffin
+407,ball,07:15.8,3,TRUE,,43959,0,Redick
+408,ball,07:13.8,3,TRUE,,44008,0,Griffin
+409,ball,06:59.9,3,TRUE,,44353,0,Bryant
+410,ball,06:55.9,3,FALSE,Shot,44453,0,Williams
+411,ball,06:52.5,3,FALSE,Attempted Steal,44537,0,Nance Jr.
+412,ball,06:51.3,3,TRUE,,44568,0,Jordan
+413,ball,06:43.8,3,FALSE,Shot,44753,0,Paul
+414,ball,06:30.0,3,TRUE,,45097,0,Clarkson
+415,ball,06:28.7,3,FALSE,Traffic,45129,0,Hibbert
+416,ball,06:26.4,3,TRUE,,45187,0,Mbah a Moute
+417,ball,06:24.1,3,TRUE,,45245,0,Hibbert
+418,ball,06:21.5,3,TRUE,,45308,0,Bryant
+419,ball,06:18.9,3,TRUE,,45375,0,Jordan
+420,ball,06:10.9,3,TRUE,,45574,0,Paul
+421,ball,06:10.6,3,FALSE,Traffic,45580,0,Clarkson
+422,ball,06:07.8,3,TRUE,Inbound,45649,0,Hibbert
+423,ball,05:58.7,3,TRUE,,45864,0,Williams
+424,ball,05:57.5,3,TRUE,,45893,0,Nance Jr.
+425,ball,05:56.4,3,TRUE,,45922,0,Hibbert
+426,ball,05:54.4,3,TRUE,,45971,0,Nance Jr.
+427,ball,05:50.0,3,TRUE,,46082,0,Clarkson
+428,ball,05:44.4,3,TRUE,,46221,0,Griffin
+429,ball,05:34.4,3,TRUE,,46470,0,Paul
+430,ball,05:32.8,3,TRUE,,46510,0,Redick
+431,ball,05:31.6,3,TRUE,,46539,0,Jordan
+432,ball,05:30.6,3,TRUE,,46564,0,Redick
+433,ball,05:29.0,3,TRUE,,46603,0,Bryant
+434,ball,05:25.5,3,FALSE,Shot,46691,0,Clarkson
+435,ball,05:24.1,3,FALSE,,46726,0,Nance Jr.
+436,ball,05:20.2,3,TRUE,,46829,0,Paul
+437,ball,05:18.7,3,TRUE,,46866,0,Redick
+438,ball,05:15.2,3,TRUE,,46954,0,Jordan
+439,ball,05:10.4,3,TRUE,,47073,0,Paul
+440,ball,05:08.3,3,TRUE,Bad pass,47125,0,Griffin
+441,ball,05:08.0,3,FALSE,Deflection,47133,0,Nance Jr.
+442,ball,05:06.5,3,TRUE,,47171,0,Hibbert
+443,ball,05:05.8,3,FALSE,,47179,0,Clarkson
+444,ball,04:53.9,3,TRUE,,47481,0,Jordan
+445,ball,04:48.5,3,TRUE,,47618,0,Paul
+446,ball,04:47.6,3,TRUE,,47642,0,Jordan
+447,ball,04:46.4,3,TRUE,,47673,0,Mbah a Moute
+448,ball,04:40.6,3,TRUE,,47818,0,Redick
+449,ball,04:37.0,3,TRUE,,47910,0,Bryant
+450,ball,04:35.5,3,TRUE,,47948,0,Nance Jr.
+451,ball,04:27.9,3,TRUE,,48254,0,Clarkson
+452,ball,04:27.8,3,FALSE,Traffic,48264,0,Paul
+453,ball,04:26.5,3,FALSE,Traffic,48328,0,Clarkson
+454,ball,04:20.7,3,TRUE,,48622,0,Nance Jr.
+455,ball,04:20.6,3,FALSE,Traffic,48628,0,Griffin
+456,ball,04:18.8,3,TRUE,,48720,0,Bryant
+457,ball,04:12.9,3,FALSE,,49018,0,Clarkson
+458,ball,04:11.7,3,TRUE,,49078,0,Clarkson
+459,ball,04:06.5,3,TRUE,,49333,0,Paul
+460,ball,04:05.5,3,TRUE,,49379,0,Nance Jr.
+461,ball,04:03.9,3,TRUE,,49418,0,Mbah a Moute
+462,ball,04:00.9,3,TRUE,,49492,0,Paul
+463,ball,03:59.6,3,FALSE,Shot,49524,0,Redick
+464,ball,03:57.0,3,TRUE,,49589,0,Nance Jr.
+465,ball,03:48.3,3,TRUE,,49800,0,Clarkson
+466,ball,03:45.4,3,TRUE,,49871,0,Nance Jr.
+467,ball,03:44.2,3,FALSE,Shot,49902,0,Hibbert
+468,ball,03:39.4,3,TRUE,,50019,0,Nance Jr.
+469,ball,03:37.9,3,TRUE,,50056,0,Clarkson
+470,ball,03:36.8,3,FALSE,Shot,50083,0,Russell
+471,ball,03:31.8,3,TRUE,,50214,0,Griffin
+472,ball,03:31.2,3,FALSE,Traffic,50230,0,Randle
+473,ball,03:30.4,3,FALSE,Traffic,50250,0,Randle
+474,ball,03:29.7,3,TRUE,,50267,0,Griffin
+475,ball,03:26.8,3,TRUE,,50338,0,Stephenson
+476,ball,03:25.0,3,FALSE,Shot,50383,0,Redick
+477,ball,03:21.3,3,TRUE,,50477,0,Randle
+478,ball,03:19.6,3,TRUE,,50518,0,Hibbert
+479,ball,03:13.7,3,TRUE,,50665,0,Russell
+480,ball,03:12.3,3,TRUE,,50701,0,Clarkson
+481,ball,03:10.2,3,TRUE,,50754,0,Randle
+482,ball,03:06.9,3,TRUE,,50836,0,Hibbert
+483,ball,03:05.0,3,TRUE,,50883,0,Russell
+484,ball,02:58.1,3,TRUE,,51057,0,Redick
+485,ball,02:57.9,3,FALSE,Traffic,51061,0,Griffin
+486,ball,02:32.0,3,TRUE,,51708,0,Redick
+487,ball,02:28.7,3,FALSE,Shot,51791,0,Paul
+488,ball,02:22.8,3,TRUE,,51942,0,Russell
+489,ball,02:20.2,3,TRUE,,52005,0,Young
+490,ball,02:18.8,3,TRUE,,52040,0,Russell
+491,ball,02:14.4,3,TRUE,,52146,0,Young
+492,ball,01:57.9,3,TRUE,Lob,52550,0,Griffin
+493,ball,01:54.9,3,TRUE,,52625,0,Hibbert
+494,ball,01:52.1,3,TRUE,,52693,0,Russell
+495,ball,01:43.4,3,TRUE,,52909,0,Prigioni
+496,ball,01:42.2,3,TRUE,,52939,0,Crawford
+497,ball,01:35.0,3,TRUE,,53116,0,Jordan
+498,ball,01:33.7,3,TRUE,,53147,0,Prigioni
+499,ball,01:32.0,3,TRUE,,53191,0,Griffin
+500,ball,01:25.7,3,TRUE,,53346,0,Prigioni
+501,ball,01:24.5,3,TRUE,,53375,0,Stephenson
+502,ball,01:08.7,3,TRUE,,53764,0,Russell
+503,ball,01:05.8,3,TRUE,,53835,0,Young
+504,ball,01:01.2,3,TRUE,,53956,0,Jordan
+505,ball,01:00.1,3,TRUE,,53985,0,Prigioni
+506,ball,00:52.6,3,TRUE,,54178,0,Griffin
+507,ball,00:51.0,3,TRUE,,54221,0,Crawford
+508,ball,00:46.1,3,FALSE,Shot,54345,0,Crawford
+509,ball,00:33.9,3,FALSE,Block,54652,0,Griffin
+510,ball,00:32.5,3,FALSE,Block,54686,0,Griffin
+511,ball,00:32.1,3,TRUE,,54697,0,Russell
+512,ball,00:31.6,3,FALSE,Block,54709,0,Griffin
+513,ball,00:28.6,3,TRUE,,54787,0,Stephenson
+514,ball,00:22.6,3,TRUE,,54934,0,Prigioni
+515,ball,00:16.4,3,TRUE,,55090,0,Crawford
+516,ball,00:15.1,3,FALSE,Shot,55122,0,Pierce
+517,ball,11:55.3,4,TRUE,,55615,0,Huertas
+518,ball,11:52.8,4,TRUE,,55675,0,Randle
+519,ball,11:51.9,4,TRUE,,55699,0,Young
+520,ball,11:50.5,4,FALSE,Traffic,55733,0,Crawford
+521,ball,11:48.2,4,TRUE,,55790,0,Russell
+522,ball,11:47.9,4,FALSE,Block,55798,0,Randle
+523,ball,11:47.6,4,FALSE,Block,55805,0,Aldrich
+524,ball,11:45.5,4,FALSE,Block,55856,0,Randle
+525,ball,11:45.0,4,FALSE,Block,55870,0,Aldrich
+526,ball,11:43.7,4,FALSE,Block,55900,0,Randle
+527,ball,11:42.9,4,TRUE,,55921,0,Prigioni
+528,ball,11:42.3,4,TRUE,,55936,0,Aldrich
+529,ball,11:40.6,4,TRUE,,55978,0,Prigioni
+530,ball,11:40.3,4,TRUE,,55985,0,Aldrich
+531,ball,11:39.6,4,TRUE,,56004,0,Pierce
+532,ball,11:37.5,4,TRUE,,56056,0,Crawford
+533,ball,11:37.2,4,FALSE,Traffic,56062,0,Russell
+534,ball,11:36.2,4,TRUE,,56087,0,Pierce
+535,ball,11:35.3,4,FALSE,,56110,0,Stephenson
+536,ball,11:34.7,4,TRUE,,56124,0,Prigioni
+537,ball,11:33.3,4,TRUE,,56158,0,Stephenson
+538,ball,11:27.3,4,TRUE,,56309,0,Prigioni
+539,ball,11:26.1,4,TRUE,,56339,0,Stephenson
+540,ball,11:25.7,4,FALSE,Shot,56349,0,Pierce
+541,ball,11:19.5,4,TRUE,,56493,0,Huertas
+542,ball,11:16.5,4,TRUE,,56569,0,Bass
+543,ball,11:14.2,4,TRUE,,56626,0,Pierce
+544,ball,11:13.3,4,TRUE,,56650,0,Bass
+545,ball,11:12.2,4,TRUE,,56677,0,Huertas
+546,ball,11:12.0,4,FALSE,Traffic,56682,0,Aldrich
+547,ball,11:09.1,4,TRUE,,56757,0,Prigioni
+548,ball,11:08.6,4,TRUE,,56770,0,Pierce
+549,ball,11:05.6,4,TRUE,,56846,0,Prigioni
+550,ball,11:00.9,4,TRUE,,56965,0,Pierce
+551,ball,10:54.8,4,TRUE,,57120,0,Bass
+552,ball,10:52.7,4,TRUE,,57175,0,Huertas
+553,ball,10:52.5,4,FALSE,Traffic,57179,0,Stephenson
+554,ball,10:50.3,4,TRUE,,57236,0,Young
+555,ball,10:48.5,4,FALSE,Shot,57281,0,Randle
+556,ball,10:41.7,4,TRUE,,57451,0,Prigioni
+557,ball,10:39.8,4,TRUE,,57499,0,Aldrich
+558,ball,10:34.4,4,TRUE,,57629,0,Crawford
+559,ball,10:32.2,4,TRUE,,57683,0,Pierce
+560,ball,10:30.8,4,TRUE,,57719,0,Huertas
+561,ball,10:13.1,4,TRUE,,58299,0,Prigioni
+562,ball,10:12.9,4,FALSE,Deflection,58304,0,Huertas
+563,ball,10:01.7,4,TRUE,,58736,0,Huertas
+564,ball,10:00.8,4,FALSE,Shot,58758,0,Randle
+565,ball,10:00.4,4,FALSE,Traffic,58767,0,Aldrich
+566,ball,09:58.4,4,FALSE,Shot,58814,0,Randle
+567,ball,09:57.7,4,FALSE,Shot,58832,0,Randle
+568,ball,09:48.9,4,TRUE,,59019,0,Prigioni
+569,ball,09:48.3,4,TRUE,,59033,0,Pierce
+570,ball,09:46.5,4,TRUE,,59078,0,Stephenson
+571,ball,09:45.4,4,FALSE,Traffic,59105,0,Stephenson
+572,ball,09:43.9,4,TRUE,,59143,0,Aldrich
+573,ball,09:43.7,4,FALSE,Traffic,59147,0,Bass
+574,ball,09:42.9,4,FALSE,Shot,59167,0,Crawford
+575,ball,09:41.5,4,FALSE,Shot,59202,0,Crawford
+576,ball,09:41.4,4,TRUE,,59205,0,Pierce
+577,ball,09:41.0,4,FALSE,Traffic,59215,0,Prigioni
+578,ball,09:24.6,4,TRUE,,59628,0,Huertas
+579,ball,09:22.7,4,TRUE,,59678,0,Young
+580,ball,09:20.2,4,TRUE,,59740,0,Huertas
+581,ball,09:18.8,4,TRUE,,59773,0,Bass
+582,ball,09:05.2,4,TRUE,,60113,0,Crawford
+583,ball,09:04.3,4,TRUE,,60133,0,Pierce
+584,ball,09:03.7,4,FALSE,Deflection,60149,0,Aldrich
+585,ball,08:50.1,4,FALSE,Traffic,60487,0,Huertas
+586,ball,08:48.3,4,TRUE,,60533,0,Stephenson
+587,ball,08:37.5,4,TRUE,,60799,0,Young
+588,ball,08:29.3,4,FALSE,,61004,0,Bass
+589,ball,08:28.3,4,FALSE,,61028,0,Crawford
+590,ball,08:26.4,4,TRUE,,61076,0,Pierce
+591,ball,08:17.6,4,TRUE,,61294,0,Prigioni
+592,ball,08:15.3,4,TRUE,,61353,0,Crawford
+593,ball,08:12.7,4,TRUE,,61417,0,Pierce
+594,ball,08:09.7,4,TRUE,,61491,0,Prigioni
+595,ball,08:07.0,4,FALSE,Shot,61559,0,Stephenson
+596,ball,08:03.3,4,TRUE,,61651,0,Randle
+597,ball,08:00.7,4,TRUE,,61715,0,Russell
+598,ball,07:59.6,4,TRUE,,61741,0,Huertas
+599,ball,07:58.6,4,FALSE,Shot,61766,0,Young
+600,ball,07:54.4,4,FALSE,Shot,61870,0,Randle
+601,ball,07:52.4,4,TRUE,,61920,0,Pierce
+602,ball,07:38.2,4,FALSE,Shot,62275,0,Crawford
+603,ball,07:35.0,4,TRUE,,62354,0,Young
+604,ball,07:25.4,4,TRUE,,62592,0,Huertas
+605,ball,07:21.2,4,TRUE,,62697,0,Young
+606,ball,07:13.4,4,FALSE,Shot,62891,0,Russell
+607,ball,07:07.3,4,TRUE,,63044,0,Crawford
+608,ball,07:05.1,4,TRUE,,63099,0,Paul
+609,ball,06:31.0,4,TRUE,,63952,0,Paul
+610,ball,06:29.5,4,TRUE,,63989,0,Crawford
+611,ball,06:22.6,4,TRUE,,64162,0,Griffin
+612,ball,06:07.4,4,TRUE,,64542,0,Huertas
+613,ball,05:58.2,4,FALSE,Shot,64771,0,Randle
+614,ball,05:56.9,4,TRUE,,64804,0,Griffin
+615,ball,05:53.5,4,TRUE,,64889,0,Paul
+616,ball,05:51.9,4,FALSE,Shot,64929,0,Johnson
+617,ball,05:45.8,4,TRUE,,65082,0,Russell
+618,ball,05:35.9,4,TRUE,,65330,0,Russell
+619,ball,05:35.7,4,FALSE,Traffic,65335,0,Jordan
+620,ball,05:34.1,4,FALSE,Traffic,65375,0,Jordan
+621,ball,05:19.4,4,TRUE,Lob,65742,0,Paul
+622,ball,05:18.0,4,TRUE,,65776,0,Bass
+623,ball,05:16.3,4,FALSE,Traffic,65819,0,Young
+624,ball,05:16.0,4,FALSE,Traffic,65826,0,Griffin
+625,ball,05:15.0,4,TRUE,,65852,0,Young
+626,ball,05:03.3,4,FALSE,Block,66144,0,Russell
+627,ball,05:03.1,4,FALSE,Block,66149,0,Paul
+628,ball,04:55.8,4,TRUE,,66331,0,Griffin
+629,ball,04:53.6,4,TRUE,,66386,0,Crawford
+630,ball,04:45.7,4,TRUE,,66584,0,Griffin
+631,ball,04:40.6,4,TRUE,,66708,0,Paul
+632,ball,04:32.4,4,TRUE,,66905,0,Young
+633,ball,04:28.5,4,TRUE,,66998,0,Russell
+634,ball,04:23.5,4,FALSE,Traffic,67128,0,Russell
+635,ball,04:17.2,4,TRUE,,67284,0,Paul
+636,ball,04:13.1,4,TRUE,,67386,0,Griffin
+637,ball,04:11.5,4,FALSE,Steal,67427,0,Paul
+638,ball,04:09.8,4,TRUE,,67468,0,Russell
+639,ball,04:04.2,4,TRUE,,67607,0,Bass
+640,ball,04:01.1,4,FALSE,Shot,67684,0,Randle
+641,ball,03:58.7,4,TRUE,,67757,0,Paul
+642,ball,03:57.8,4,TRUE,,67778,0,Griffin
+643,ball,03:56.4,4,TRUE,,67814,0,Johnson
+644,ball,03:54.5,4,TRUE,,67861,0,Paul
+645,ball,03:54.1,4,FALSE,Traffic,67869,0,Russell
+646,ball,03:53.1,4,TRUE,,67895,0,Jordan
+647,ball,03:50.7,4,TRUE,,67954,0,Redick
+648,ball,03:46.4,4,TRUE,,68060,0,Griffin
+649,ball,03:45.6,4,TRUE,,68080,0,Redick
+650,ball,03:39.7,4,TRUE,,68225,0,Griffin
+651,ball,03:38.4,4,FALSE,Shot,68259,0,Johnson
+652,ball,03:36.9,4,TRUE,,68296,0,Bass
+653,ball,03:20.8,4,FALSE,Steal,68692,0,Russell
+654,ball,03:20.2,4,FALSE,Steal,68707,0,Russell
+655,ball,03:19.3,4,FALSE,Steal,68729,0,Jordan
+656,ball,03:15.0,4,FALSE,Carry,68837,0,Griffin
+657,ball,03:08.3,4,TRUE,,68996,0,Huertas
+658,ball,03:06.8,4,FALSE,Shot,69032,0,Randle
+659,ball,03:04.8,4,FALSE,Traffic,69084,0,Redick
+660,ball,02:55.8,4,TRUE,,69309,0,Paul
+661,ball,02:53.3,4,TRUE,,69373,0,Johnson
+662,ball,02:52.6,4,FALSE,Deflection,69390,0,Griffin
+663,ball,02:50.4,4,TRUE,,69445,0,Randle
+664,ball,02:48.6,4,TRUE,,69491,0,Russell
+665,ball,02:47.4,4,TRUE,,69520,0,Randle
+666,ball,02:45.8,4,FALSE,Shot,69562,0,Bass
+667,ball,02:45.5,4,FALSE,Shot,69567,0,Bass
+668,ball,02:45.5,4,FALSE,Traffic,69569,0,Johnson
+669,ball,02:41.0,4,TRUE,Inbound,69681,0,Jordan
+670,ball,02:21.0,4,TRUE,,70185,0,Randle
+671,ball,02:13.8,4,TRUE,,70365,0,Russell
+672,ball,02:05.1,4,TRUE,,70582,0,Griffin
+673,ball,02:04.0,4,FALSE,Shot,70611,0,Redick
+674,ball,02:01.0,4,TRUE,,70686,0,Bass
+675,ball,01:55.8,4,TRUE,,70818,0,Russell
+676,ball,01:47.9,4,FALSE,Traffic,71016,0,Paul
+677,ball,01:32.7,4,FALSE,Traffic,71394,0,Paul
+678,ball,01:31.2,4,FALSE,Traffic,71430,0,Jordan
+679,ball,01:14.3,4,TRUE,,71854,0,Bass
+680,ball,01:01.6,4,TRUE,,72173,0,Griffin
+681,ball,00:39.5,4,TRUE,,72733,0,Randle
+682,ball,00:29.3,4,TRUE,,72985,0,Redick

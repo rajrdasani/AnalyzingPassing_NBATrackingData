@@ -83,7 +83,9 @@ fullcourt() +
   scale_color_manual(values = c("Lakers" = "#fdb927",
                                 "Clippers" = "#1D428A",
                                 "ball" = "#FA8320")) +
-  scale_y_reverse()
+  scale_y_reverse() +
+  labs(title = "First Play of the Games, ball map",
+       subtitle = "Red: start of passes, Green: end of passes")
 ```
 
 --------------------------------------------------------------------------------------------------------------

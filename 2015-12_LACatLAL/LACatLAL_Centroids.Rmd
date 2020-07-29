@@ -306,4 +306,158 @@ fullcourt() +
              size=3, shape=8)
 ```
 
+--------------------------------------------------------------------------------------------------------------------
+
+```{r}
+source("../RajivFunctions.R")
+source("get_nodes_new.R")
+
+selected_play = fulltrack %>%
+  filter(game_clock < 696, game_clock > 680, quarter == 1)
+
+firstposs_moments_ball = full_game %>%
+  filter(game_clock < 696, game_clock > 680, quarter == 1) %>%
+  filter(lastname == "ball")
+
+
+nodes <- get_nodes(min(firstposs_moments_ball$frame_num):max(firstposs_moments_ball$frame_num))
+```
+
+
+
+```{r}
+total <- selected_play
+total$x_loc_r <- total$x_loc
+total$y_loc_r <- total$y_loc
+
+pass_median <- rep(0, nrow(nodes))
+pass_post <- rep(0, nrow(nodes))
+  
+for (i in 1:nrow(nodes)) {
+  if (i < nrow(nodes)) {
+    pass_median[i] <- round((nodes$game_clock[i] +
+                               nodes$game_clock[i + 1]) / 2, 2) 
+    
+    pass_post[i] =
+      selected_play[which.min(abs(selected_play$game_clock - pass_median[i])), ]$game_clock
+      
+    } else {
+      pass_median[i] <- nodes$game_clock[i] - 3
+        #round((nodes$game_clock[i] +                              tail(selected_play_ball[selected_play_ball$radius > 10, ], 1)$game_clock) / 2, 2)
+      pass_post[i] <-
+        selected_play[which.min(abs(selected_play$game_clock - pass_median[i])), ]$game_clock
+    }
+  }
+  
+
+```
+
+```{r}
+source("passes_areas.R")
+
+passes = c(nodes$game_clock, pass_post)
+passes = passes[c(order(passes))]
+
+court_areas <- 
+  passes_areas(passes = passes,
+    selected_play = selected_play,
+             nodes = nodes)
+court_areas
+
+```
+
+```{r}
+for (i in 1:nrow(nodes)) {
+  dplayer <- player_position(eventid = 6, nodes$game_clock[i]) #Gets positions of players
+  dchull <- chull_plot(event.id = 6, nodes$game_clock[i]) #Gets area of convex hull
+  dcentroid <- chull_plot_centroid(event.id = 6, nodes$game_clock[i])
+  
+  print(
+    fullcourt() + 
+    ##Add players
+    geom_point(data=dplayer,
+               aes(x=X, y=Y, group=ID),
+               color=dense_rank(dplayer$ID),
+               size=5) +
+    geom_text(data = dplayer, 
+              aes(label=Name, x = X, y = Y + 3)) + 
+    scale_colour_brewer() +
+    ##Add Convex hull areas
+    geom_polygon(data=dchull,aes(x=X,y=Y,group=ID),
+                 fill=dense_rank(dchull$ID),
+                 alpha = 0.2) + 
+    scale_fill_brewer() + 
+    ##Add Centroids
+    scale_shape_identity() +
+    geom_point(data=dcentroid,aes(x=X,y=Y,group=ID),
+             color=(dcentroid$ID),
+             size=3, shape=8) +
+    #ball
+    geom_point(data = filter(firstposs_moments_ball, game_clock == nodes$game_clock[i]),
+               aes(x = x_loc, y = y_loc),
+               color = "orange",
+               size = 3)
+  )
+
+  
+  dplayer <- player_position(eventid = 6, pass_post[i]) #Gets positions of players
+  dchull <- chull_plot(event.id = 6, pass_post[i])       #Gets area of convex hull
+  dcentroid <- chull_plot_centroid(event.id = 6, pass_post[i])
+  
+  print(
+    fullcourt() + 
+    ##Add players
+    geom_point(data=dplayer,
+               aes(x=X, y=Y, group=ID),
+               color=dense_rank(dplayer$ID),
+               size=5) +
+    geom_text(data = dplayer, 
+              aes(label=Name, x = X, y = Y + 3)) + 
+    scale_colour_brewer() +
+    ##Add Convex hull areas
+    geom_polygon(data=dchull,aes(x=X,y=Y,group=ID),
+                 fill=dense_rank(dchull$ID),
+                 alpha = 0.2) + 
+    scale_fill_brewer() + 
+    ##Add Centroids
+    scale_shape_identity() +
+    geom_point(data=dcentroid,aes(x=X,y=Y,group=ID),
+             color=(dcentroid$ID),
+             size=3, shape=8) +
+    geom_point(data = filter(firstposs_moments_ball, game_clock == pass_post[i]),
+               aes(x = x_loc, y = y_loc),
+               color = "orange",
+               size = 3)
+  )
+}
+
+```
+
+
+
+
+```{r}
+fullcourt() + 
+  geom_point(data = court_areas,
+             aes(x = clippers_centroid.1.,
+                 y = clippers_centroid.2.,
+                 label = pass_number), 
+             color = "blue",
+             size = 2) +
+  geom_text(data = court_areas, aes(x = clippers_centroid.1.,
+                                        y = clippers_centroid.2.,
+                                        label = pass_number),
+            vjust = 0, nudge_y = 0.5) +
+  geom_point(data = court_areas,
+             aes(x = lakers_centroid.1.,
+                 y = lakers_centroid.2.,
+                 label = pass_number), 
+             color = "gold",
+             size = 2) +
+  geom_text(data = court_areas, aes(x = lakers_centroid.1.,
+                                    y = lakers_centroid.2.,
+                                    label = pass_number),
+            vjust = 0, nudge_y = 0.5)
+  
+```
 

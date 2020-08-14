@@ -220,7 +220,7 @@ for(i in 1:nrow(test)) {
 }
 
 
-test %>%
+pass_poss <- test %>%
   group_by(poss, team) %>%
   summarise(count = n())
 
@@ -228,7 +228,34 @@ shots_only <- filter(fulltrack, EVENTMSGTYPE %in% c(1,2)) %>%
   arrange(-game_clock, quarter)
 
 
+"Lakers" = "#fdb927",
+"Clippers" = "#1D428A"
 
+library(patchwork)
+
+re <- pass_poss[pass_poss$team == "Lakers",]
+ree <- ggplot(data = re, aes(count)) +
+  geom_histogram(stat = "count", fill = "#fdb927") +
+  scale_x_discrete(limits = c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10")) +
+  geom_vline(xintercept = mean(re$count), size = 2) +
+  ylim(0,40) +
+  labs(title = "Lakers Passes per Possession",
+       x = "Number of Passes",
+       y = "Number of Possessions")
+
+re2 <- pass_poss[pass_poss$team == "Clippers",]
+ree2 <- ggplot(data = re2, aes(count)) +
+  geom_histogram(stat = "count", fill = "#1D428A") +
+  scale_x_discrete(limits = c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10")) +
+  geom_vline(xintercept = mean(re2$count), size = 2) +
+  ylim(0,40) +
+  labs(title = "Clippers Passes per Possession",
+       x = "Number of Passes",
+       y = "Number of Possessions")
+
+ree + ree2 + plot_layout(ncol=1)
+
+mean(pass_poss$count)
 ```
 
 ```{r}

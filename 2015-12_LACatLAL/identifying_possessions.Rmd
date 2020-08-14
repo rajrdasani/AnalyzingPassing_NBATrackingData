@@ -1,0 +1,163 @@
+---
+title: "Identifying Possessions"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(trajr)
+library(lubridate)
+library(hms)
+
+source("../RajivFunctions.R")
+source("../fullcourt.R")
+
+
+#### --- Load raw data sets --- ####
+
+moments <- sportvu_convert_json("LACatLAL.json")
+pbp <- read_csv("LACatLAL_playbyplay.csv") %>% 
+  clean_names()
+
+
+#### --- Merge data --- ####
+# Remove frames that don't have 11 observations
+# Clean the team and game_clock variables
+# Arrange in chronological order
+
+moments_with_pbp <- moments %>% 
+  left_join(pbp, by = c("event.id" = "eventnum", "quarter" = "period")) %>% 
+  mutate(team = case_when(team_id == 1610612747 ~ "Lakers",
+                          team_id == 1610612746 ~ "Clippers",
+                          is.na(team_id) ~ "ball"),
+         game_clock = hms::as_hms(game_clock),
+         est_time_of_play = hms::as_hms(pctimestring/60)) %>% 
+  group_by(quarter, event.id, game_clock) %>% 
+  mutate(count = n()) %>% 
+  ungroup() %>% 
+  filter(count == 11) %>% 
+  select(-matches("\\d")) %>% 
+  select(-pctimestring) %>% 
+  select(homedescription, visitordescription, everything()) %>% 
+  arrange(quarter, event.id, desc(game_clock), desc(shot_clock)) 
+
+
+#### --- Get rid of duplicated camera frames --- ####
+# Create ID variable for camera frames
+# Create ball handler variable
+
+full_game <- moments_with_pbp %>% 
+  select(-contains(c("description", "event", "timestring", "score", "game_id"))) %>% 
+  unique() %>% 
+  arrange(quarter, desc(game_clock), desc(shot_clock)) %>% 
+  mutate(frame_num = rep(1:(nrow(.)/11), each = 11)) %>%
+  mutate(dist_to_ball = unlist(lapply(1:nrow(.), function(x) dist_to_ball(., x)))) %>% 
+  group_by(frame_num) %>%
+  mutate(ball_handler = ifelse(length(minN(dist_to_ball, 2)) > 1,
+                               lag(ball_handler),
+                               which(dist_to_ball == minN(dist_to_ball, 2)))) %>%
+  ungroup()
+
+ball_handler_vec <- (full_game %>%
+                       group_by(frame_num) %>%
+                       slice(ball_handler) %>%
+                       unique())$lastname
+
+full_game <- full_game %>% 
+  mutate(ball_handler = rep(ball_handler_vec, each = 11))
+
+
+#### --- Look at the movement of the ball --- ####
+# Fix clock stoppage errors
+# Create displacement variable
+
+all_ball_frames <- full_game %>%
+  filter(lastname == "ball")
+
+runs <- all_ball_frames %>% 
+  group_by(run = rep(1:length(rle(all_ball_frames$displacement > 3)$values),
+                     rle(all_ball_frames$displacement > 3)$lengths)) %>% 
+  group_nest() %>% 
+  pull(data)
+
+for (i in seq(2, length(runs), by = 2)) {
+  runs[[i]] <- runs[[i]] %>% 
+    arrange(row_number() %% 2 == 0)
+}
+
+all_ball_frames <- bind_rows(runs) %>%
+  mutate(displacement = c(sqrt(diff(x_loc)^2 + diff(y_loc)^2 + diff(radius)^2), NA)) %>% 
+  filter(lag(displacement) != 0)
+```
+
+```{r}
+lakers_players <- unique(fulltrack[fulltrack$team_id == 1610612747, ]$lastname)
+lakers_players <- lakers_players[!is.na(lakers_players)]
+clippers_players <- unique(fulltrack[fulltrack$team_id == 1610612746, ]$lastname)
+clippers_players <- clippers_players[!is.na(clippers_players)]
+
+full_game$team_poss = NA
+for (i in 1:nrow(full_game)) {
+  if(full_game$ball_handler[i] %in% lakers_players) {
+    full_game$team_poss[i] = "Lakers"
+  } else if (full_game$ball_handler[i] %in% clippers_players) {
+    full_game$team_poss[i] = "Clippers"
+  } else {
+    full_game$team_poss[i] = "None"
+  }
+}
+
+full_game
+
+```
+
+```{r}
+full_game %>%
+  group_by(frame_num) %>%
+  summarise(start_game_clock = max(game_clock),
+            ball_handler = first(ball_handler))
+
+
+test <- full_game %>%
+  mutate(team_poss_lag = lag(team_poss, 1),
+         change = !(team_poss_lag == team_poss)) %>%
+  select(game_clock, quarter, team_poss, team_poss_lag, change)
+test$change[1] = FALSE
+
+
+```
+
+```{r}
+all_ball_frames$cross_hc <- NA
+all_ball_frames$poss <- NA
+
+
+all_ball_frames$cross_hc[1] <- FALSE
+all_ball_frames$poss[1] <- 0
+
+poss = 0
+for(i in 2:nrow(all_ball_frames)) {
+  if((all_ball_frames$x_loc[i-1] > 47 & all_ball_frames$x_loc[i] < 47) |
+     (all_ball_frames$x_loc[i-1] < 47 & all_ball_frames$x_loc[i] > 47)) {
+    
+    all_ball_frames$cross_hc[i] <- TRUE
+    
+    poss <- poss + 1
+    all_ball_frames$poss[i] <- poss
+    
+  } else {
+    
+    all_ball_frames$cross_hc[i] <- FALSE
+    all_ball_frames$poss[i] <- poss
+  }
+}
+poss
+
+
+all_ball_frames
+```
+
+
+
+

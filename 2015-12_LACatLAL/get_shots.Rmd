@@ -1,0 +1,93 @@
+---
+title: "get shots rmd"
+output: html_document
+---
+```{r}
+source("get_shots.R")
+source("get_nodes_new.R")
+source("../RajivFunctions.R")
+library(trajr)
+library(dplyr)
+```
+
+```{r}
+all_nodes <- final_nodes()
+all_all <- final_nodes_shots()
+all_nodes
+all_all
+```
+
+What defines a shot:
+1) diff > 0.1 seconds -> a new shot
+2) find closest 7 feet ball point 
+
+
+```{r}
+all_ball_above10 <- all_ball_frames[all_ball_frames$radius > 10,]
+
+shotnum = 1
+for(i in 1:(nrow(all_ball_above10) - 1)) {
+  all_ball_above10$time_diff[i] <-
+    all_ball_above10$game_clock[i] - 
+    all_ball_above10$game_clock[i + 1]
+  if(all_ball_above10$time_diff[i] > 0.06) {
+    shotnum = shotnum + 1
+  }
+  all_ball_above10$shot_num[i] = shotnum
+}
+
+all_ball_new = merge(all_ball_above10, all_ball_frames, 
+      by = colnames(all_ball_frames), 
+      all = TRUE)
+
+max(all_ball_new$shot_num, na.rm = TRUE)
+```
+
+```{r}
+all_ball_new <- all_ball_new[order(all_ball_new[,12],
+                                   -all_ball_new[,10]), ]
+```
+
+finds first occurance of shot
+goes backwards until it finds a y_loc under 7 feet 
+marks it and everything up to it as shot number 
+
+```{r}
+shot_dummy = 1
+for(i in 1:nrow(all_ball_new)) {
+  if (!is.na(all_ball_new$shot_num[i]) &
+      all_ball_new$shot_num[i] == shot_dummy) {
+    for(j in i:0) {
+      if (all_ball_new$radius[j] > 7) {all_ball_new$shot_num[j] = shot_dummy}
+      else {break}
+    }
+    shot_dummy = shot_dummy + 1 
+  }
+}
+```
+
+```{r}
+all_shot_starts = 
+  all_ball_new %>%
+  group_by(shot_num) %>%
+  slice(1)
+
+all_shot_starts = all_shot_starts[!(all_shot_starts$shot_clock == 0) &
+                                    !is.na(all_shot_starts$shot_clock), ]
+all_shot_starts = all_shot_starts[!(all_shot_starts$frame_num == 1), ]
+
+all_shot_starts = all_shot_starts[!(all_shot_starts$radius > 8),]
+```
+
+```{r}
+strsplit(as.character(all_shot_starts$game_clock[1]), ":")[[1]][2]
+
+
+
+
+shots_nbastatr <- read.csv("shots_nbastatr.csv")
+shots_nbastatr <- shots_nbastatr[order(shots_nbastatr$idEvent),]
+
+all_ball_frames$
+```
+

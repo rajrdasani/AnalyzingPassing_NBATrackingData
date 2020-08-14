@@ -80,15 +80,4 @@ ggplot(fulltrack, aes(SCOREMARGIN)) +
   geom_histogram(bins = 8)
 ```
 
-Presence of the mid-range shot was still there, but not too many long 2s being taken, even in 2015.
-
-```{r}
-ggplot(shots, aes(Distance)) +
-  geom_histogram() +
-  geom_vline(xintercept = 22) +
-  geom_vline(xintercept = 24)
-
-ggplot(shots, aes(Distance)) +
-  geom_histogram(binwidth = 5)
-```
 

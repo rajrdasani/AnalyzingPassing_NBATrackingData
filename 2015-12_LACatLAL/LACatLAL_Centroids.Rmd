@@ -324,6 +324,37 @@ nodes <- get_nodes(min(firstposs_moments_ball$frame_num):max(firstposs_moments_b
 ```
 
 
+```{r}
+firstposs_moments_ball$area_diff <- 0
+
+for (i in 1:nrow(firstposs_moments_ball)) {
+  firstposs_moments_ball$area_diff[i] = 
+    sqrt(((firstposs_moments_ball$x_loc[i+1] - firstposs_moments_ball$x_loc[i]) ** 2) +
+               ((firstposs_moments_ball$y_loc[i+1] - firstposs_moments_ball$y_loc[i]) ** 2) +
+                 ((firstposs_moments_ball$radius[i+1] - firstposs_moments_ball$radius[i]) ** 2))
+}
+
+firstposs_moments_ball$sig_mov <- firstposs_moments_ball$area_diff > 0.5
+```
+
+
+```{r}
+endnodes_df <- NULL
+for (i in 1:nrow(nodes)) {
+  postnode_df <- firstposs_moments_ball[firstposs_moments_ball$game_clock < nodes$game_clock[i] - 0.08 &
+                                          firstposs_moments_ball$quarter == nodes$quarter[i], ]
+  endnode <- postnode_df[postnode_df$sig_mov == FALSE,][1,]
+  endnodes_df <- rbind(endnodes_df, endnode)
+}
+
+```
+
+
+```{r}
+nodes$pass_num <- c(1:nrow(nodes))
+endnodes_df$pass_num <- c(1:nrow(nodes))
+```
+
 
 ```{r}
 total <- selected_play
@@ -342,7 +373,7 @@ for (i in 1:nrow(nodes)) {
       selected_play[which.min(abs(selected_play$game_clock - pass_median[i])), ]$game_clock
       
     } else {
-      pass_median[i] <- nodes$game_clock[i] - 3
+      pass_median[i] <- endnodes_df$game_clock[i] - 1
         #round((nodes$game_clock[i] +                              tail(selected_play_ball[selected_play_ball$radius > 10, ], 1)$game_clock) / 2, 2)
       pass_post[i] <-
         selected_play[which.min(abs(selected_play$game_clock - pass_median[i])), ]$game_clock

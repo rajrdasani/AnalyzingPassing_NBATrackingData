@@ -17,13 +17,30 @@ all_nodes
 all_all
 ```
 
+```{r}
+library(hms)
+all_ball_frames2$game_clock = hms::as_hms(game_clock)
+
+full_game2 = read.csv("full_game.csv")
+all_ball_frames2 = full_game2[full_game2$lastname == "ball", ]
+all_ball_frames2$game_clock = hms::as_hms(all_ball_frames2$game_clock)
+```
+
+
+```{r}
+for (i in 1:nrow(all_ball_frames2)) {
+  all_ball_frames2$minute[i] = strsplit(as.character(all_ball_frames2$game_clock[i]), ":")[[1]][2]
+}
+```
+
+
 What defines a shot:
 1) diff > 0.1 seconds -> a new shot
 2) find closest 7 feet ball point 
 
 
 ```{r}
-all_ball_above10 <- all_ball_frames[all_ball_frames$radius > 10,]
+all_ball_above10 <- all_ball_frames2[all_ball_frames2$radius > 10,]
 
 shotnum = 1
 for(i in 1:(nrow(all_ball_above10) - 1)) {
@@ -36,8 +53,8 @@ for(i in 1:(nrow(all_ball_above10) - 1)) {
   all_ball_above10$shot_num[i] = shotnum
 }
 
-all_ball_new = merge(all_ball_above10, all_ball_frames, 
-      by = colnames(all_ball_frames), 
+all_ball_new = merge(all_ball_above10, all_ball_frames2, 
+      by = colnames(all_ball_frames2), 
       all = TRUE)
 
 max(all_ball_new$shot_num, na.rm = TRUE)
@@ -77,17 +94,16 @@ all_shot_starts = all_shot_starts[!(all_shot_starts$shot_clock == 0) &
 all_shot_starts = all_shot_starts[!(all_shot_starts$frame_num == 1), ]
 
 all_shot_starts = all_shot_starts[!(all_shot_starts$radius > 8),]
+
+View(all_shot_starts)
+View(shots_nbastatr)
 ```
 
 ```{r}
-strsplit(as.character(all_shot_starts$game_clock[1]), ":")[[1]][2]
-
-
-
-
 shots_nbastatr <- read.csv("shots_nbastatr.csv")
 shots_nbastatr <- shots_nbastatr[order(shots_nbastatr$idEvent),]
 
-all_ball_frames$
+shots_nbastatr$minutesRemaining == all_shot_starts$minute
+
 ```
 

@@ -83,6 +83,21 @@ for(i in 1:nrow(all_ball_new)) {
 }
 ```
 
+find last point where a shot is marked (last point where the ball is 10 feet, presumably when its going down the rim)
+
+```{r}
+shot_end_time = 
+  all_ball_new[!is.na(all_ball_new$shot_num),] %>%
+  group_by(shot_num) %>%
+  summarize(shot_end_time = min(game_clock),
+            num_frames = n())
+
+ggplot(shot_end_time, aes(num_frames)) +
+  geom_histogram()
+```
+
+insert text
+
 ```{r}
 all_shot_starts = 
   all_ball_new %>%
@@ -95,15 +110,62 @@ all_shot_starts = all_shot_starts[!(all_shot_starts$frame_num == 1), ]
 
 all_shot_starts = all_shot_starts[!(all_shot_starts$radius > 8),]
 
-View(all_shot_starts)
-View(shots_nbastatr)
 ```
+
+```{r}
+all_shot_starts <- merge(all_shot_starts, shot_end_time, by = "shot_num")
+all_shot_starts$shot_end_time = as.numeric(all_shot_starts$shot_end_time)
+```
+
+
+load real shot data
 
 ```{r}
 shots_nbastatr <- read.csv("shots_nbastatr.csv")
 shots_nbastatr <- shots_nbastatr[order(shots_nbastatr$idEvent),]
+```
 
-shots_nbastatr$minutesRemaining == all_shot_starts$minute
+
+create unique time variable for each data frame
+
+```{r}
+for (i in 1:nrow(shots_nbastatr)) {
+  shots_nbastatr$time[i] <- (shots_nbastatr$minutesRemaining[i] * 60) +
+                            (shots_nbastatr$secondsRemaining[i])
+  shots_nbastatr$time[i] = shots_nbastatr$time[i] + ((4 - shots_nbastatr$numberPeriod[i]) * 720)
+}
+
+for (i in 1:nrow(all_shot_starts)) {
+  all_shot_starts$time[i] <- as.numeric(all_shot_starts$game_clock[i])
+  all_shot_starts$time[i] = all_shot_starts$time[i] + ((4 - all_shot_starts$quarter[i]) * 720)
+  all_shot_starts$shot_end_time[i] = all_shot_starts$shot_end_time[i] + ((4 - all_shot_starts$quarter[i]) * 720)
+}
+
+test <- all_shot_starts$time - all_shot_starts$shot_end_time
+
+
+all_ball_new[!is.na(all_ball_new$shot_num), ]
+```
+
+
+put the data together 
+
+```{r}
+count = 0
+track_rows <- c()
+nbastatr_rows <- c()
+for (i in 1:nrow(all_shot_starts)) {
+  for (j in 1:nrow(shots_nbastatr)) {
+    if (abs(all_shot_starts$shot_end_time[i] - shots_nbastatr$time[j]) < 3) {
+      count = count + 1
+      track_rows <- append(track_rows, i)
+      nbastatr_rows <- append(nbastatr_rows, j)
+    }
+  }
+}
+
+all_shot_starts
+all_shot_starts$shot_total_time = all_shot_starts$time - all_shot_starts$shot_end_time
 
 ```
 

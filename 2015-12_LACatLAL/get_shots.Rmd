@@ -8,19 +8,10 @@ source("get_nodes_new.R")
 source("../RajivFunctions.R")
 library(trajr)
 library(dplyr)
-```
-
-```{r}
-all_nodes <- final_nodes()
-all_all <- final_nodes_shots()
-all_nodes
-all_all
-```
-
-```{r}
 library(hms)
-all_ball_frames2$game_clock = hms::as_hms(game_clock)
+```
 
+```{r}
 full_game2 = read.csv("full_game.csv")
 all_ball_frames2 = full_game2[full_game2$lastname == "ball", ]
 all_ball_frames2$game_clock = hms::as_hms(all_ball_frames2$game_clock)
@@ -90,7 +81,9 @@ shot_end_time =
   all_ball_new[!is.na(all_ball_new$shot_num),] %>%
   group_by(shot_num) %>%
   summarize(shot_end_time = min(game_clock),
-            num_frames = n())
+            num_frames = n(),
+            last_x = last(x_loc),
+            last_y = last(y_loc))
 
 ggplot(shot_end_time, aes(num_frames)) +
   geom_histogram()
@@ -116,6 +109,13 @@ all_shot_starts = all_shot_starts[!(all_shot_starts$radius > 8),]
 all_shot_starts <- merge(all_shot_starts, shot_end_time, by = "shot_num")
 all_shot_starts$shot_end_time = as.numeric(all_shot_starts$shot_end_time)
 ```
+
+```{r}
+actual_shots <- c(TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, 
+                  TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, )
+foul_called <- c(rep(FALSE, 14), TRUE)
+```
+
 
 
 load real shot data
@@ -167,5 +167,9 @@ for (i in 1:nrow(all_shot_starts)) {
 all_shot_starts
 all_shot_starts$shot_total_time = all_shot_starts$time - all_shot_starts$shot_end_time
 
+```
+
+```{r}
+shots_nbastatr
 ```
 

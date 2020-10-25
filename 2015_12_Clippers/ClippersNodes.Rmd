@@ -1,0 +1,92 @@
+---
+title: "ClippersNodes"
+output: html_document
+---
+```{r}
+library(ggplot2)
+```
+
+```{r}
+all_passes = read.csv("all_passes.csv")
+all_endnodes = read.csv("all_end_nodes.csv")
+all_passes
+```
+
+```{r}
+fullcourt() + 
+  geom_point(data = all_passes, aes(x = x_loc, y = y_loc)) +
+  geom_hline(yintercept = 25, color = "purple")
+
+fullcourt() + 
+  geom_point(data = all_endnodes, aes(x = x_loc_end, y = y_loc_end)) +
+  geom_hline(yintercept = 25, color = "purple")
+
+```
+
+```{r}
+library(patchwork)
+
+all_passes_halfcourt <- all_passes[ball_handler_team == ]
+
+for (i in 1:nrow(all_passes_halfcourt)) {
+  if(all_passes_halfcourt$x_loc[i] > 47) {
+    all_passes_halfcourt$x_loc[i] <- 94 - all_passes_halfcourt$x_loc[i]
+    all_passes_halfcourt$y_loc[i] <- 50 - all_passes_halfcourt$y_loc[i]
+  }
+}
+
+p1 <- halfcourt() +
+  geom_hex(data = all_passes_halfcourt, aes(x_loc, y_loc), binwidth = c(3,3), alpha = 0.7) +
+  scale_fill_gradient(low = "darkblue", 
+                      high = "darkorange",
+                      limits = c(10,300)) + 
+  theme_bw() + theme(legend.position = "none") +
+  coord_fixed() +
+  ggtitle("Starting Locations")
+
+all_endnodes_hc <- all_endnodes
+
+for (i in 1:nrow(all_endnodes_hc)) {
+  if(!is.na(all_endnodes_hc$x_loc_end[i]) & all_endnodes_hc$x_loc_end[i] > 47) {
+    all_endnodes_hc$x_loc_end[i] <- 94 - all_endnodes_hc$x_loc_end[i]
+    all_endnodes_hc$y_loc_end[i] <- 50 - all_endnodes_hc$y_loc_end[i]
+  }
+}
+
+
+p2 <- halfcourt() +
+  geom_hex(data = all_endnodes_hc, aes(x_loc_end, y_loc_end), binwidth = c(3,3), alpha = 0.7) +
+  scale_fill_gradient(low = "darkblue", 
+                      high = "darkorange",
+                      limits = c(10,300)) + 
+  theme_bw() +
+  coord_fixed() +
+  ggtitle("Ending Locations")
+
+p1 + p2
+```
+
+```{r}
+passers <- data.frame(table(all_passes$ball_handler))
+receivers <- data.frame(table(all_passes$receiver))
+test <- merge(passers, receivers, by = "Var1")
+test$diff <- test$`Freq.x` - test$`Freq.y`
+test <- test[test$Freq.x > 100,]
+
+library(tidyr)
+library(tidyverse)
+test <- test %>% arrange(diff)
+test$position <- c("G", "G", "G", "F", "F", "F", "G", "F", "F", "G", "F", "C", "G", "C")
+```
+
+```{r}
+ggplot(test, aes(x = reorder(Var1, -diff), y = diff, fill = position)) +
+  geom_bar(stat = "identity") + 
+  theme_bw() + 
+  xlab("Player") + 
+  ylab("Recieved minus Passed") +
+  theme(axis.text.x=element_text(angle=30,hjust=1)) +
+  ggtitle("Passes Recieved minus Passed for Players with at least 100 Passes")
+
+```
+

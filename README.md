@@ -1,5 +1,6 @@
-# NBATrackingData
-NBA Tracking Data
+## Quantifying NBA Passing
+### Using NBA Tracking Data to Create an Expected Assist Model
+
 
 Presentation: 
 http://stat.cmu.edu/cmsac/conference/2020/assets/pdf/nba_tracking_data.pdf
